@@ -7,6 +7,88 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32*"/>
+            <RowDefinition Height="185*"/>
+        </Grid.RowDefinitions>
 
+        <TextBlock x:Name="Month_TextBlock" 
+                   Text="Mes " VerticalAlignment="Top" HorizontalAlignment="Left" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
+        <TextBlock x:Name="Age_TextBlock" 
+                   Text="Ano" VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
+
+        <Grid x:Name="Calendar_Grid" Grid.Row="1" 
+              Background="White"
+              ShowGridLines="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Background="WhiteSmoke"
+                    Grid.RowSpan="7"
+                    Grid.Column="6"/>
+            <Border Background="WhiteSmoke"
+                    Grid.RowSpan="7"
+                    Grid.Column="5"/>
+            <Border Background="SteelBlue"
+                    Grid.ColumnSpan="7"/>
+            
+
+            <TextBlock x:Name="Monday_TextBlock" 
+                   Grid.Row="0" Grid.Column="0"
+                   Text="Monday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock x:Name="Tuesday_TextBlock" 
+                   Grid.Row="0" Grid.Column="1"
+                   Text="Tuesday"
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="Wednesday_TextBlock" 
+                   Grid.Row="0" Grid.Column="2"
+                   Text="Wednesday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="Thursday_TextBlock" 
+                   Grid.Row="0" Grid.Column="3"
+                   Text="Thursday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="Friday_TextBlock" 
+                   Grid.Row="0" Grid.Column="4"
+                   Text="Friday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="Saturday_TextBlock" 
+                   Grid.Row="0" Grid.Column="5"
+                   Text="Saturday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="Sunday_TextBlock" 
+                   Grid.Row="0" Grid.Column="6"
+                   Text="Sunday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+        </Grid>
     </Grid>
+
 </Window>
