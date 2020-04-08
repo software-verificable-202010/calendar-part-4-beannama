@@ -26,8 +26,6 @@ namespace Proyecto_1
         //Because a field initializer cannopt reference the non-static field, method, or property 'MainWindow.this_date'
 
         DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month,1);
-        
-
 
         public MainWindow()
         {
@@ -44,18 +42,14 @@ namespace Proyecto_1
         public void CalendarCreation()
         {
             TitleChanger();
-
             int weekNumber;
             int weekDay;
             DateTime auxiliarDate = targetedDate;
             int daysinMonth = System.DateTime.DaysInMonth(targetedDate.Year, targetedDate.Month);
-
-
             for (int day = 1; day <= daysinMonth; day++)
             {
                 weekNumber = GetWeekNumberOfMonth(auxiliarDate);
                 weekDay = (int)auxiliarDate.DayOfWeek;
-
                 NumberCreation(weekNumber, weekDay, day.ToString());
                 auxiliarDate = targetedDate.AddDays(day);
             }
@@ -65,12 +59,13 @@ namespace Proyecto_1
         public int GetWeekNumberOfMonth(DateTime date)
         {
             DateTime beginningOfMonth = new DateTime(date.Year, date.Month, 1);
-
+            int weekNumber;
             while (date.Date.AddDays(1).DayOfWeek != CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek)
                 date = date.AddDays(1);
             float daysOnWeek = 7f;
+            weekNumber = (int)Math.Truncate((double)date.Subtract(beginningOfMonth).TotalDays / daysOnWeek) + 1;
 
-            return (int)Math.Truncate((double)date.Subtract(beginningOfMonth).TotalDays / daysOnWeek) + 1; //+1 So it starts on Monday and not Sunday
+            return weekNumber; //+1 So it starts on Monday and not Sunday
         }
 
         public void NumberCreation(int targetedRow, int targetedCol, string contentText)
@@ -92,8 +87,6 @@ namespace Proyecto_1
 
             return label;
         }
-
-        
 
         public void AddElementToCalendar(Label numberLabel, int targetedRow, int targetedCol)
         {
@@ -123,14 +116,12 @@ namespace Proyecto_1
             int calendarLarge = 7;
             AddColorToCalendar(calendarLarge, sundayColumn);
             AddColorToCalendar(calendarLarge, saturdayColumn);
-
         }
 
 
         private void ChangeMonthPositive(object sender, RoutedEventArgs e)
         {
             targetedDate = targetedDate.AddMonths(1);
-            
             CleanCalendar();
             TitleChanger();
             CalendarCreation();
@@ -139,7 +130,6 @@ namespace Proyecto_1
         private void ChangeMonthNegative(object sender, RoutedEventArgs e)
         {
             targetedDate = targetedDate.AddMonths(-1);
-
             CleanCalendar();
             TitleChanger();
             CalendarCreation();
