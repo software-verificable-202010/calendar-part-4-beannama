@@ -63,9 +63,9 @@ namespace Proyecto_1
             while (date.Date.AddDays(1).DayOfWeek != CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek)
                 date = date.AddDays(1);
             float daysOnWeek = 7f;
-            weekNumber = (int)Math.Truncate((double)date.Subtract(beginningOfMonth).TotalDays / daysOnWeek) + 1;
+            weekNumber = (int)Math.Truncate((double)date.Subtract(beginningOfMonth).TotalDays / daysOnWeek);
 
-            return weekNumber; //+1 So it starts on Monday and not Sunday
+            return weekNumber;
         }
 
         public void NumberCreation(int targetedRow, int targetedCol, string contentText)
