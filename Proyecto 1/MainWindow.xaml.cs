@@ -24,24 +24,24 @@ namespace Proyecto_1
         //We couldn't use a variable
         //DateTime this_date = DateTime.Now;
         //Because a field initializer cannopt reference the non-static field, method, or property 'MainWindow.this_date'
-
-        DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month,1);
+        static int firstDayOfMonth = 1;
+        DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
 
         public MainWindow()
         {
             InitializeComponent();
-            CalendarCreation();
+            CreateCalendar();
         }
 
-        public void TitleChanger()
+        public void ChangeTitle()
         {
             MonthTextBlock.Text = targetedDate.ToString("MMMM");
             YearTextBlock.Text = targetedDate.Year.ToString();
         }
 
-        public void CalendarCreation()
+        public void CreateCalendar()
         {
-            TitleChanger();
+            ChangeTitle();
             int weekNumber;
             int weekDay;
             DateTime auxiliarDate = targetedDate;
@@ -50,7 +50,7 @@ namespace Proyecto_1
             {
                 weekNumber = GetWeekNumberOfMonth(auxiliarDate);
                 weekDay = (int)auxiliarDate.DayOfWeek;
-                NumberCreation(weekNumber, weekDay, day.ToString());
+                CreateNumber(weekNumber, weekDay, day.ToString());
                 auxiliarDate = targetedDate.AddDays(day);
             }
 
@@ -58,7 +58,7 @@ namespace Proyecto_1
 
         public int GetWeekNumberOfMonth(DateTime date)
         {
-            DateTime beginningOfMonth = new DateTime(date.Year, date.Month, 1);
+            DateTime beginningOfMonth = new DateTime(date.Year, date.Month, firstDayOfMonth);
             int weekNumber;
             while (date.Date.AddDays(1).DayOfWeek != CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek)
                 date = date.AddDays(1);
@@ -68,20 +68,23 @@ namespace Proyecto_1
             return weekNumber;
         }
 
-        public void NumberCreation(int targetedRow, int targetedCol, string contentText)
+        public void CreateNumber(int targetedRow, int targetedCol, string contentText)
         {
-            Label numberLabel = LabelNumberCreation(contentText);
+            Label numberLabel = CreateNumberLabel(contentText);
             AddElementToCalendar(numberLabel, targetedRow, targetedCol);
         }
 
-        public Label LabelNumberCreation(string contentText)
+        public Label CreateNumberLabel(string contentText)
         {
+            int numberLabelWidth = 30;
+            int numberLabelHeight = 240;
+
             Label label = new Label
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Width = 240,
-                Height = 30,
+                Width = numberLabelWidth,
+                Height = numberLabelWidth,
                 Content = contentText
             };
 
@@ -123,16 +126,16 @@ namespace Proyecto_1
         {
             targetedDate = targetedDate.AddMonths(1);
             CleanCalendar();
-            TitleChanger();
-            CalendarCreation();
+            ChangeTitle();
+            CreateCalendar();
 
         }
         private void ChangeMonthNegative(object sender, RoutedEventArgs e)
         {
             targetedDate = targetedDate.AddMonths(-1);
             CleanCalendar();
-            TitleChanger();
-            CalendarCreation();
+            ChangeTitle();
+            CreateCalendar();
         }
     }
 }
