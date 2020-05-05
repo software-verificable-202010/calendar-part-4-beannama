@@ -21,11 +21,13 @@ namespace Proyecto_1
     /// </summary>
     public partial class MainWindow : Window
     {
-        //We couldn't use a variable
-        //DateTime this_date = DateTime.Now;
-        //Because a field initializer cannopt reference the non-static field, method, or property 'MainWindow.this_date'
         static int firstDayOfMonth = 1;
         DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
+        public enum ViewModes{ 
+            Weeks,
+            Months
+        };
+        public ViewModes modeView;
 
         public MainWindow()
         {
@@ -46,14 +48,27 @@ namespace Proyecto_1
             int weekDay;
             DateTime auxiliarDate = targetedDate;
             int daysinMonth = System.DateTime.DaysInMonth(targetedDate.Year, targetedDate.Month);
-            for (int day = 1; day <= daysinMonth; day++)
+            if(modeView == ViewModes.Months)
             {
-                weekNumber = GetWeekNumberOfMonth(auxiliarDate);
-                weekDay = (int)auxiliarDate.DayOfWeek;
-                CreateNumber(weekNumber, weekDay, day.ToString());
-                auxiliarDate = targetedDate.AddDays(day);
+                for (int day = 1; day <= daysinMonth; day++)
+                {
+                    weekNumber = GetWeekNumberOfMonth(auxiliarDate);
+                    weekDay = (int)auxiliarDate.DayOfWeek;
+                    CreateNumber(weekNumber, weekDay, day.ToString());
+                    auxiliarDate = targetedDate.AddDays(day);
+                }
             }
-
+            else if(modeView == ViewModes.Weeks)
+            {
+                //DO
+                //for (int day = 1; day <= daysinMonth; day++)
+                //{
+                //    weekNumber = GetWeekNumberOfMonth(auxiliarDate);
+                //    weekDay = (int)auxiliarDate.DayOfWeek;
+                //    CreateNumber(weekNumber, weekDay, day.ToString());
+                //    auxiliarDate = targetedDate.AddDays(day);
+                //}
+            }
         }
 
         public int GetWeekNumberOfMonth(DateTime date)
@@ -84,7 +99,7 @@ namespace Proyecto_1
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Width = numberLabelWidth,
-                Height = numberLabelWidth,
+                Height = numberLabelHeight,
                 Content = contentText
             };
 
@@ -95,25 +110,32 @@ namespace Proyecto_1
         {
             Grid.SetColumn(numberLabel, targetedCol);
             Grid.SetRow(numberLabel, targetedRow);
-            CalendarGrid.Children.Add(numberLabel);
+            MonthCalendarGrid.Children.Add(numberLabel);
         }
 
         public void AddColorToCalendar(int calendarLarge, int targetedCol)
         {
             Border colorWeekend = new Border
             {
-                Background = Brushes.WhiteSmoke,
+                Background = Brushes.AliceBlue,
             };
             Grid.SetColumn(colorWeekend, targetedCol);
             Grid.SetRowSpan(colorWeekend, calendarLarge);
-            CalendarGrid.Children.Add(colorWeekend);
+            MonthCalendarGrid.Children.Add(colorWeekend);
         }
-
 
 
         public void CleanCalendar()
         {
-            CalendarGrid.Children.Clear();
+            if (modeView == ViewModes.Months)
+            {
+                MonthCalendarGrid.Children.Clear();
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                WeekCalendarGrid.Children.Clear();
+            }
+            
             int saturdayColumn = 5;
             int sundayColumn = 6;
             int calendarLarge = 7;
@@ -121,21 +143,81 @@ namespace Proyecto_1
             AddColorToCalendar(calendarLarge, saturdayColumn);
         }
 
-
-        private void ChangeMonthPositive(object sender, RoutedEventArgs e)
+        public void CheckVisibility()
         {
-            targetedDate = targetedDate.AddMonths(1);
-            CleanCalendar();
-            ChangeTitle();
-            CreateCalendar();
+            if (modeView == ViewModes.Months)
+            {
+                WeekCalendarGrid.Visibility = Visibility.Hidden;
+                DaysOfWeekWeekGrid.Visibility = Visibility.Hidden;
 
+                DaysOfWeekMonthGrid.Visibility = Visibility.Visible;
+                MonthCalendarGrid.Visibility = Visibility.Visible;
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                WeekCalendarGrid.Visibility = Visibility.Visible;
+                DaysOfWeekWeekGrid.Visibility = Visibility.Visible;
+                DaysOfWeekMonthGrid.Visibility = Visibility.Hidden;
+                MonthCalendarGrid.Visibility = Visibility.Hidden;
+            }
         }
-        private void ChangeMonthNegative(object sender, RoutedEventArgs e)
+
+        public void ChangeToDayOne()
         {
-            targetedDate = targetedDate.AddMonths(-1);
+            targetedDate = targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
+        }
+
+        private void Btn_ChangePositive(object sender, RoutedEventArgs e)
+        {
+            if(modeView== ViewModes.Months)
+            {
+                targetedDate = targetedDate.AddMonths(1);
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                targetedDate = targetedDate.AddDays(7);
+            }
             CleanCalendar();
             ChangeTitle();
             CreateCalendar();
+        }
+        private void Btn_ChangeNegative(object sender, RoutedEventArgs e)
+        {
+            if (modeView == ViewModes.Months)
+            {
+                targetedDate = targetedDate.AddMonths(-1);
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                targetedDate = targetedDate.AddDays(-7);
+            }
+            
+            CleanCalendar();
+            ChangeTitle();
+            CreateCalendar();
+        }
+        private void ComboBox_ChangeSelection(object sender, SelectionChangedEventArgs e)
+        {
+            int monthIndex = 0;
+            int weekIndex = 1;
+
+            if (CB_Mode.SelectedIndex.Equals(monthIndex)) {
+                modeView = ViewModes.Months;
+            }
+            else if (CB_Mode.SelectedIndex.Equals(weekIndex))
+            {
+                modeView = ViewModes.Weeks;
+            }
+        }
+        private void CB_CloseDropdown(object sender, EventArgs e)
+        {
+            CheckVisibility();
+            ChangeToDayOne();
+        }
+
+        private void Btn_CreateAppointment(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

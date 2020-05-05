@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Proyecto_1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="768" Width="1024">
 
 
     <Grid>
@@ -18,23 +18,59 @@
             <RowDefinition Height="185*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="MonthTextBlock" 
-                   Text="Mes " VerticalAlignment="Top" HorizontalAlignment="Left" 
+        <Grid x:Name="HeaderGrid"
+              Grid.Row="0"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="MonthTextBlock" 
+                   Text="Mes " VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Grid.Column="0"
                    Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
-        <TextBlock x:Name="YearTextBlock" 
-                   Text="Year" VerticalAlignment="Top" HorizontalAlignment="Center" 
+            <TextBlock x:Name="YearTextBlock" 
+                   Text="Year" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Grid.Column="2"
                    Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
 
-        <Button Content="&lt;" Margin="0,5,100,0"
-                VerticalAlignment="Top"  HorizontalAlignment="Right"
-                FontSize="36" FontFamily="Berlin Sans FB Demi" 
-                IsCancel="True" Click="ChangeMonthNegative" />
-        <Button Content="&gt;" Margin="0,5,35,0"
-                VerticalAlignment="Top"  HorizontalAlignment="Right"
-                FontSize="36" FontFamily="Berlin Sans FB Demi"
-                IsCancel="True" Click="ChangeMonthPositive" />
+            <TextBlock x:Name="ViewModeTextBlock" 
+                   Text="View Mode" VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Grid.Column="3"
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
+            <ComboBox Name="CB_Mode"
+                      Grid.Column="3" 
+                      HorizontalAlignment="Center" VerticalAlignment="Center" 
+                      SelectedIndex="0" SelectionChanged="ComboBox_ChangeSelection" FontSize="22" DropDownClosed="CB_CloseDropdown">
+                <ComboBoxItem Tag="Months" x:Name="Months" 
+                    Content="Months">
+                </ComboBoxItem>
+                <ComboBoxItem Content="Weeks">
+                </ComboBoxItem>
+            </ComboBox>
+                
+            <Button Content="&lt;"
+                VerticalAlignment="Center"  HorizontalAlignment="Left"
+                Grid.Column="4"  
+                FontSize="72" FontFamily="Berlin Sans FB Demi" 
+                IsCancel="True" Click="Btn_ChangeNegative" />
+            <Button x:Name="Btn_Apointment"
+                VerticalAlignment="Center"  HorizontalAlignment="Center"
+                Grid.Column="4"  
+                FontSize="16" FontFamily="Berlin Sans FB Demi" 
+                IsCancel="True"  Content="Create Appointment" Click="Btn_CreateAppointment"/>
+            <Button Content="&gt;"
+                Grid.Column="4" 
+                VerticalAlignment="Center"  HorizontalAlignment="Right"
+                FontSize="72" FontFamily="Berlin Sans FB Demi"
+                IsCancel="True" Click="Btn_ChangePositive" />
 
-        <Grid x:Name="DaysOfWeekGrid" 
+        </Grid>
+        <Grid x:Name="DaysOfWeekMonthGrid" 
               Grid.Row="1" 
               Background="SteelBlue"
               ShowGridLines="True">
@@ -52,47 +88,46 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="MondayTextBlock" 
+            <TextBlock x:Name="MondayMonthTextBlock" 
                    Grid.Row="1" Grid.Column="0"
                    Text="Monday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
-            <TextBlock x:Name="TuesdayTextBlock" 
+            <TextBlock x:Name="TuesdayMonthTextBlock" 
                    Grid.Row="1" Grid.Column="1"
                    Text="Tuesday"
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
-            <TextBlock x:Name="WednesdayTextBlock" 
+            <TextBlock x:Name="WednesdayMonthTextBlock" 
                    Grid.Row="1" Grid.Column="2"
                    Text="Wednesday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
-            <TextBlock x:Name="ThursdayTextBlock" 
+            <TextBlock x:Name="ThursdayMonthTextBlock" 
                    Grid.Row="1" Grid.Column="3"
                    Text="Thursday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
-            <TextBlock x:Name="FridayTextBlock" 
+            <TextBlock x:Name="FridayMonthTextBlock" 
                    Grid.Row="1" Grid.Column="4"
                    Text="Friday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
-            <TextBlock x:Name="SaturdayTextBlock" 
+            <TextBlock x:Name="SaturdayMonthTextBlock" 
                    Grid.Row="1" Grid.Column="5"
                    Text="Saturday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
-            <TextBlock x:Name="SundayTextBlock" 
+            <TextBlock x:Name="SundayMonthTextBlock" 
                    Grid.Row="1" Grid.Column="6"
                    Text="Sunday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
         </Grid>
-
-        <Grid x:Name="CalendarGrid" 
+        <Grid x:Name="MonthCalendarGrid" 
               Grid.Row="2" 
               Background="White"
-              ShowGridLines="True">
+              ShowGridLines="True" Visibility="Hidden">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -112,13 +147,242 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Border Background="WhiteSmoke"
+            <Border Background="AliceBlue"
                     Grid.RowSpan="7"
                     Grid.Column="6"/>
-            <Border Background="WhiteSmoke"
+            <Border Background="AliceBlue"
                     Grid.RowSpan="7"
                     Grid.Column="5"/>
 
         </Grid>
+
+        <Grid x:Name="DaysOfWeekWeekGrid" 
+              Grid.Row="1" 
+              Background="SteelBlue"
+              ShowGridLines="True">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock  
+                   Grid.Row="0" Grid.Column="0"
+                   Text="1 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="SteelBlue" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock x:Name="MondayWeekTextBlock" 
+                   Grid.Row="0" Grid.Column="1"
+                   Text="Monday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock x:Name="TuesdayWeekTextBlock" 
+                   Grid.Row="0" Grid.Column="2"
+                   Text="Tuesday"
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="WednesdayWeekTextBlock" 
+                   Grid.Row="0" Grid.Column="3"
+                   Text="Wednesday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="ThursdayWeekTextBlock" 
+                   Grid.Row="0" Grid.Column="4"
+                   Text="Thursday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="FridayWeekTextBlock" 
+                   Grid.Row="0" Grid.Column="5"
+                   Text="Friday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="SaturdayWeekTextBlock" 
+                   Grid.Row="0" Grid.Column="6"
+                   Text="Saturday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+            <TextBlock x:Name="SundayWeekTextBlock" 
+                   Grid.Row="0" Grid.Column="7"
+                   Text="Sunday" 
+                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
+        </Grid>
+
+        <Grid x:Name="WeekCalendarGrid"
+              Grid.Row="2"
+              Background="White"
+              ShowGridLines="True" Visibility="Visible"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock  
+                   Grid.Row="0" Grid.Column="0"
+                   Text="1 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="1" Grid.Column="0"
+                   Text="2 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="2" Grid.Column="0"
+                   Text="3 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="3" Grid.Column="0"
+                   Text="4 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="4" Grid.Column="0"
+                   Text="5 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="5" Grid.Column="0"
+                   Text="6 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="6" Grid.Column="0"
+                   Text="7 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="7" Grid.Column="0"
+                   Text="8 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="8" Grid.Column="0"
+                   Text="9 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="9" Grid.Column="0"
+                   Text="10 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="10" Grid.Column="0"
+                   Text="11 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="11" Grid.Column="0"
+                   Text="12 AM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="12" Grid.Column="0"
+                   Text="1 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="13" Grid.Column="0"
+                   Text="1 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="14" Grid.Column="0"
+                   Text="2 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="15" Grid.Column="0"
+                   Text="3 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="16" Grid.Column="0"
+                   Text="4 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="17" Grid.Column="0"
+                   Text="5 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="18" Grid.Column="0"
+                   Text="6 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="19" Grid.Column="0"
+                   Text="7 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="20" Grid.Column="0"
+                   Text="8 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="21" Grid.Column="0"
+                   Text="9 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="22" Grid.Column="0"
+                   Text="10 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  
+                   Grid.Row="23" Grid.Column="0"
+                   Text="11 PM" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left" 
+                   Foreground="Gray" FontSize="11" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+
+        </Grid>
+
     </Grid>
 </Window>
