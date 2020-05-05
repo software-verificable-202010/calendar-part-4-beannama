@@ -60,14 +60,7 @@ namespace Proyecto_1
             }
             else if(modeView == ViewModes.Weeks)
             {
-                //DO
-                //for (int day = 1; day <= daysinMonth; day++)
-                //{
-                //    weekNumber = GetWeekNumberOfMonth(auxiliarDate);
-                //    weekDay = (int)auxiliarDate.DayOfWeek;
-                //    CreateNumber(weekNumber, weekDay, day.ToString());
-                //    auxiliarDate = targetedDate.AddDays(day);
-                //}
+                //TODO: Put numbers on WeekDays
             }
         }
 

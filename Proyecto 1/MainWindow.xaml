@@ -18,7 +18,7 @@
             <RowDefinition Height="185*"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="HeaderGrid"
+        <Grid x:Name="NavigationGrid"
               Grid.Row="0"
             >
             <Grid.ColumnDefinitions>
@@ -37,7 +37,6 @@
                    Text="Year" VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Grid.Column="2"
                    Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
-
             <TextBlock x:Name="ViewModeTextBlock" 
                    Text="View Mode" VerticalAlignment="Top" HorizontalAlignment="Center" 
                    Grid.Column="3"
@@ -52,7 +51,6 @@
                 <ComboBoxItem Content="Weeks">
                 </ComboBoxItem>
             </ComboBox>
-                
             <Button Content="&lt;"
                 VerticalAlignment="Center"  HorizontalAlignment="Left"
                 Grid.Column="4"  
@@ -70,6 +68,8 @@
                 IsCancel="True" Click="Btn_ChangePositive" />
 
         </Grid>
+        
+        
         <Grid x:Name="DaysOfWeekMonthGrid" 
               Grid.Row="1" 
               Background="SteelBlue"
@@ -127,7 +127,7 @@
         <Grid x:Name="MonthCalendarGrid" 
               Grid.Row="2" 
               Background="White"
-              ShowGridLines="True" Visibility="Hidden">
+              ShowGridLines="True">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -156,10 +156,12 @@
 
         </Grid>
 
+        
         <Grid x:Name="DaysOfWeekWeekGrid" 
               Grid.Row="1" 
               Background="SteelBlue"
-              ShowGridLines="True">
+              ShowGridLines="True" 
+              Visibility="Hidden">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -217,12 +219,11 @@
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
         </Grid>
-
         <Grid x:Name="WeekCalendarGrid"
               Grid.Row="2"
               Background="White"
-              ShowGridLines="True" Visibility="Visible"
-            >
+              ShowGridLines="True"
+              Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
