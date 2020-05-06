@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Proyecto_1
 {
     /// <summary>
@@ -21,11 +22,11 @@ namespace Proyecto_1
     /// </summary>
     public partial class MainWindow : Window
     {
-        static int firstDayOfMonth = 1;
+        static readonly int firstDayOfMonth = 1;
         DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
         public enum ViewModes{ 
             Weeks,
-            Months
+            Months,
         };
         public ViewModes modeView;
 
@@ -103,7 +104,16 @@ namespace Proyecto_1
         {
             Grid.SetColumn(numberLabel, targetedCol);
             Grid.SetRow(numberLabel, targetedRow);
-            MonthCalendarGrid.Children.Add(numberLabel);
+            if (modeView == ViewModes.Months)
+            {
+                MonthCalendarGrid.Children.Add(numberLabel);
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                //TODO: Check This
+                WeekCalendarGrid.Children.Add(numberLabel);
+            }
+            
         }
 
         public void AddColorToCalendar(int calendarLarge, int targetedCol)
@@ -114,7 +124,16 @@ namespace Proyecto_1
             };
             Grid.SetColumn(colorWeekend, targetedCol);
             Grid.SetRowSpan(colorWeekend, calendarLarge);
-            MonthCalendarGrid.Children.Add(colorWeekend);
+            ;
+            if (modeView == ViewModes.Months)
+            {
+                MonthCalendarGrid.Children.Add(colorWeekend);
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                //TODO: Check This
+                WeekCalendarGrid.Children.Add(colorWeekend);
+            }
         }
 
 
@@ -140,19 +159,24 @@ namespace Proyecto_1
         {
             if (modeView == ViewModes.Months)
             {
-                WeekCalendarGrid.Visibility = Visibility.Hidden;
-                DaysOfWeekWeekGrid.Visibility = Visibility.Hidden;
-
                 DaysOfWeekMonthGrid.Visibility = Visibility.Visible;
                 MonthCalendarGrid.Visibility = Visibility.Visible;
+
+                WeekCalendarGrid.Visibility = Visibility.Hidden;
+                DaysOfWeekWeekGrid.Visibility = Visibility.Hidden;
+                AppointmentContainerGrid.Visibility = Visibility.Hidden;
             }
             else if (modeView == ViewModes.Weeks)
             {
                 WeekCalendarGrid.Visibility = Visibility.Visible;
                 DaysOfWeekWeekGrid.Visibility = Visibility.Visible;
+
+                
                 DaysOfWeekMonthGrid.Visibility = Visibility.Hidden;
                 MonthCalendarGrid.Visibility = Visibility.Hidden;
+                AppointmentContainerGrid.Visibility = Visibility.Hidden;
             }
+
         }
 
         public void ChangeToDayOne()
@@ -160,9 +184,13 @@ namespace Proyecto_1
             targetedDate = targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
         }
 
+        
+
         private void Btn_ChangePositive(object sender, RoutedEventArgs e)
         {
-            if(modeView== ViewModes.Months)
+            CheckVisibility();
+
+            if (modeView== ViewModes.Months)
             {
                 targetedDate = targetedDate.AddMonths(1);
             }
@@ -176,6 +204,8 @@ namespace Proyecto_1
         }
         private void Btn_ChangeNegative(object sender, RoutedEventArgs e)
         {
+            CheckVisibility();
+
             if (modeView == ViewModes.Months)
             {
                 targetedDate = targetedDate.AddMonths(-1);
@@ -188,8 +218,9 @@ namespace Proyecto_1
             CleanCalendar();
             ChangeTitle();
             CreateCalendar();
+
         }
-        private void ComboBox_ChangeSelection(object sender, SelectionChangedEventArgs e)
+        private void CB_ChangeViewMode(object sender, SelectionChangedEventArgs e)
         {
             int monthIndex = 0;
             int weekIndex = 1;
@@ -202,7 +233,7 @@ namespace Proyecto_1
                 modeView = ViewModes.Weeks;
             }
         }
-        private void CB_CloseDropdown(object sender, EventArgs e)
+        private void CB_CloseDropdownView(object sender, EventArgs e)
         {
             CheckVisibility();
             ChangeToDayOne();
@@ -210,7 +241,23 @@ namespace Proyecto_1
 
         private void Btn_CreateAppointment(object sender, RoutedEventArgs e)
         {
+            AppointmentContainerGrid.Visibility = Visibility.Visible;
 
+            MonthCalendarGrid.Visibility = Visibility.Hidden;
+            WeekCalendarGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void Btn_ClickCancelForm(object sender, RoutedEventArgs e)
+        {
+            //TODO: Clean the Form
+            CheckVisibility();
+        }
+
+        private void Btn_ClickSaveForm(object sender, RoutedEventArgs e)
+        {
+            //TODO:Store the data
+            //TODO:Clean the Form
+            CheckVisibility();
         }
     }
 }

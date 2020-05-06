@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Proyecto_1"
+        xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+        xmlns:local="clr-namespace:Proyecto_1" 
+        
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024">
 
@@ -30,7 +32,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="MonthTextBlock" 
-                   Text="Mes " VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Text="Month " VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Grid.Column="0"
                    Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
             <TextBlock x:Name="YearTextBlock" 
@@ -44,7 +46,7 @@
             <ComboBox Name="CB_Mode"
                       Grid.Column="3" 
                       HorizontalAlignment="Center" VerticalAlignment="Center" 
-                      SelectedIndex="0" SelectionChanged="ComboBox_ChangeSelection" FontSize="22" DropDownClosed="CB_CloseDropdown">
+                      SelectedIndex="0" SelectionChanged="CB_ChangeViewMode" FontSize="22" DropDownClosed="CB_CloseDropdownView">
                 <ComboBoxItem Tag="Months" x:Name="Months" 
                     Content="Months">
                 </ComboBoxItem>
@@ -68,8 +70,189 @@
                 IsCancel="True" Click="Btn_ChangePositive" />
 
         </Grid>
-        
-        
+
+        <Grid x:Name="AppointmentContainerGrid"
+              Background="White"
+              Grid.Row="2"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="AppointmentTittleGrid"
+                Grid.Row="0">
+
+                <TextBlock 
+                   Grid.Row="0" Grid.Column="2"
+                   Text="Appointment Creation" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            </Grid>
+
+            <Grid x:Name="AppointmentFormGrid"
+                Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock 
+                   Grid.Row="0" Grid.Column="0"
+                   Text="Title:" 
+                   VerticalAlignment="Top" HorizontalAlignment="Right" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <TextBox x:Name="TB_TitleAppointment"
+                   Grid.Row="0" Grid.Column="1"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Stretch" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <TextBlock 
+                   Grid.Row="1" Grid.Column="0"
+                   Text="Date:" 
+                   VerticalAlignment="Top" HorizontalAlignment="Right" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <DatePicker x:Name="TB_DateAppointment"
+                   Grid.Row="1" Grid.Column="1"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Stretch" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <TextBlock 
+                   Grid.Row="2" Grid.Column="0"
+                   Text="StartTime:" 
+                   VerticalAlignment="Top" HorizontalAlignment="Right" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <Grid Name="StartTimeGrid"
+                    Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="TB_StartTimeHourAppointment"
+                   Grid.Column="0"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" >
+
+                        <ComboBoxItem Content="1"></ComboBoxItem>
+                        <ComboBoxItem Content="2 "></ComboBoxItem>
+                        <ComboBoxItem Content="3"></ComboBoxItem>
+                        <ComboBoxItem Content="4"></ComboBoxItem>
+                        <ComboBoxItem Content="5"></ComboBoxItem>
+                        <ComboBoxItem Content="6"></ComboBoxItem>
+                        <ComboBoxItem Content="7"></ComboBoxItem>
+                        <ComboBoxItem Content="8 "></ComboBoxItem>
+                        <ComboBoxItem Content="9"></ComboBoxItem>
+                        <ComboBoxItem Content="10"></ComboBoxItem>
+                        <ComboBoxItem Content="11"></ComboBoxItem>
+                        <ComboBoxItem Content="12"></ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox x:Name="TB_StartTimeMinuteAppointment"
+                   Grid.Column="1"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal">
+                        <ComboBoxItem Content="00"></ComboBoxItem>
+                        <ComboBoxItem Content="30 "></ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox x:Name="TB_StartTimeAMPMAppointment"
+                   Grid.Column="2"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal">
+                        <ComboBoxItem Content="AM"></ComboBoxItem>
+                        <ComboBoxItem Content="PM "></ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+                <TextBlock 
+                   Grid.Row="3" Grid.Column="0"
+                   Text="EndTime:" 
+                   VerticalAlignment="Top" HorizontalAlignment="Right" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+
+                <Grid Name="EndTimeGrid"
+                    Grid.Row="3" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="TB_EndTimeHourAppointment"
+                   Grid.Column="0"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" >
+
+                        <ComboBoxItem Content="1"></ComboBoxItem>
+                        <ComboBoxItem Content="2 "></ComboBoxItem>
+                        <ComboBoxItem Content="3"></ComboBoxItem>
+                        <ComboBoxItem Content="4"></ComboBoxItem>
+                        <ComboBoxItem Content="5"></ComboBoxItem>
+                        <ComboBoxItem Content="6"></ComboBoxItem>
+                        <ComboBoxItem Content="7"></ComboBoxItem>
+                        <ComboBoxItem Content="8 "></ComboBoxItem>
+                        <ComboBoxItem Content="9"></ComboBoxItem>
+                        <ComboBoxItem Content="10"></ComboBoxItem>
+                        <ComboBoxItem Content="11"></ComboBoxItem>
+                        <ComboBoxItem Content="12"></ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox x:Name="TB_EndTimeMinuteAppointment"
+                   Grid.Column="1"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal">
+                        <ComboBoxItem Content="00"></ComboBoxItem>
+                        <ComboBoxItem Content="30 "></ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox x:Name="TB_EndTimeAMPMAppointment"
+                   Grid.Column="2"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal">
+                        <ComboBoxItem Content="AM"></ComboBoxItem>
+                        <ComboBoxItem Content="PM "></ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+                <TextBlock 
+                   Grid.Row="4" Grid.Column="0"
+                   Text="Description:" 
+                   VerticalAlignment="Top" HorizontalAlignment="Right" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <TextBox x:Name="TB_DescriptionAppointment"
+                   Grid.Row="4" Grid.Column="1"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Stretch" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <Button x:Name="Btn_CancelForm"
+                    Grid.Row="5" Grid.Column="1" 
+                    Content="Cancel" FontSize="36" 
+                    Background="PaleVioletRed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Btn_ClickCancelForm">
+
+                </Button>
+                <Button x:Name="Btn_SaveForm"
+                    Grid.Row="5" Grid.Column="2"
+                    Content="Save" FontSize="36"
+                    Background="SteelBlue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Btn_ClickSaveForm">
+
+                </Button>
+            </Grid>
+
+
+        </Grid>
         <Grid x:Name="DaysOfWeekMonthGrid" 
               Grid.Row="1" 
               Background="SteelBlue"
@@ -127,6 +310,7 @@
         <Grid x:Name="MonthCalendarGrid" 
               Grid.Row="2" 
               Background="White"
+              Visibility="Visible"
               ShowGridLines="True">
 
             <Grid.ColumnDefinitions>
@@ -386,4 +570,5 @@
         </Grid>
 
     </Grid>
+    
 </Window>

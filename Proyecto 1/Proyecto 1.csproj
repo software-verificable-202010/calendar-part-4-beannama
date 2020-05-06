@@ -7,4 +7,16 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="AppointmentPage.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="AppointmentPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.UI.Xaml" Version="2.4.0" />
+  </ItemGroup>
+
 </Project>
