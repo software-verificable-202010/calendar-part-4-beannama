@@ -75,7 +75,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="185*"/>
             </Grid.RowDefinitions>
-            <Grid x:Name="DaysOfWeekMonthGrid" 
+            <Grid x:Name="DaysOfWeekMonthCalendarGrid" 
               Grid.Row="0" 
               Background="SteelBlue"
               ShowGridLines="True">
@@ -129,7 +129,7 @@
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
             </Grid>
-            <Grid x:Name="DaysMonthCalendarGrid" 
+            <Grid x:Name="DaysOfMonthCalendarGrid" 
               Grid.Row="1" 
               Background="White"
               Visibility="Visible"
@@ -348,15 +348,19 @@
         
         <Grid x:Name="WeekCalendarGrid"
               Grid.Row="1" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="185*"/>
+            </Grid.RowDefinitions>
 
-            <Grid x:Name="DaysOfWeekWeekGrid" 
-              Grid.Row="1" 
+            <Grid x:Name="DaysOfWeekWeekCalendarGrid" 
+              Grid.Row="0" 
               Background="SteelBlue"
               ShowGridLines="True" 
               Visibility="Visible">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -370,6 +374,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
+               
 
                 <TextBlock  
                    Grid.Row="0" Grid.Column="0"
@@ -381,6 +386,7 @@
                    Text="Monday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                
                 <TextBlock x:Name="TuesdayWeekTextBlock" 
                    Grid.Row="0" Grid.Column="2"
                    Text="Tuesday"
@@ -412,13 +418,13 @@
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
             </Grid>
-            <Grid x:Name="WeekCalendarGrid2"
-              Grid.Row="2"
+            <Grid x:Name="TimesOfDaysWeekCalendarGrid"
+              Grid.Row="1"
               Background="White"
               ShowGridLines="True"
               Visibility="Visible">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>

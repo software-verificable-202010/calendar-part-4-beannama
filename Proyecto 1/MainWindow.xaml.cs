@@ -29,7 +29,7 @@ namespace Proyecto_1
         int numberLabelWidth = 30;
         int numberLabelHeight = 240;
         int oneWeekOnDays = 7;
-        public int calendarLargeWeeks = 24;
+        int sizeForWeekLabel = 24;
         public int calendarLargeMonths = 7;
 
         DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
@@ -47,6 +47,7 @@ namespace Proyecto_1
             CreateCalendar();
         }
 
+        
         public void ChangeTitle()
         {
             MonthTextBlock.Text = targetedDate.ToString("MMMM");
@@ -61,19 +62,28 @@ namespace Proyecto_1
             DateTime auxiliarDate = targetedDate;
             int daysinMonth = System.DateTime.DaysInMonth(targetedDate.Year, targetedDate.Month);
             
-            for (int day = 1; day <= daysinMonth; day++)
-            {
-                weekNumber = GetWeekNumberOfMonth(auxiliarDate);
-                weekDay = (int)auxiliarDate.DayOfWeek;
-                CreateNumber(weekNumber, weekDay, day.ToString());
-                auxiliarDate = targetedDate.AddDays(day);
-            }
+            
 
-            //TODO: Put numbers on WeekDays
-            //for(int day = 1; day <= oneWeekOnDays; day++)
-            //{
-            //    CreateNumber(1,day,day.ToString());
-            //}
+            if (modeView == ViewModes.Months)
+            {
+                for (int day = 1; day <= daysinMonth; day++)
+                {
+                    weekNumber = GetWeekNumberOfMonth(auxiliarDate);
+                    weekDay = (int)auxiliarDate.DayOfWeek;
+                    CreateNumber(weekNumber, weekDay, day.ToString());
+                    auxiliarDate = targetedDate.AddDays(day);
+                }
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                //TODO: Put numbers on WeekDays
+
+                for (int day = 1; day <= oneWeekOnDays; day++)
+                {
+                    CreateNumber(1, day, day.ToString());
+                }
+            }
+            
         }
 
         public int GetWeekNumberOfMonth(DateTime date)
@@ -96,15 +106,31 @@ namespace Proyecto_1
 
         public Label CreateNumberLabel(string contentText)
         {
-            
-            Label label = new Label
+            Label label = new Label();
+            if (modeView == ViewModes.Months)
             {
-                HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Top,
-                Width = numberLabelWidth,
-                Height = numberLabelHeight,
-                Content = contentText
-            };
+                label = new Label
+                {
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Width = numberLabelWidth,
+                    Height = numberLabelHeight,
+                    Content = contentText
+                };
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                //TODO: Check This
+                label = new Label
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = 24,
+                    Content = contentText,
+                    Foreground = Brushes.White
+                };
+            }
+            
 
             return label;
         }
@@ -115,13 +141,12 @@ namespace Proyecto_1
             Grid.SetRow(numberLabel, targetedRow);
             if (modeView == ViewModes.Months)
             {
-                DaysMonthCalendarGrid.Children.Add(numberLabel);
+                DaysOfMonthCalendarGrid.Children.Add(numberLabel);
             }
             else if (modeView == ViewModes.Weeks)
             {
                 //TODO: Check This
-                //WeekCalendarGrid.Children.Add(numberLabel);
-                DaysOfWeekWeekGrid.Children.Add(numberLabel);
+                DaysOfWeekWeekCalendarGrid.Children.Add(numberLabel);
             }
             
         }
@@ -137,12 +162,7 @@ namespace Proyecto_1
             ;
             if (modeView == ViewModes.Months)
             {
-                DaysMonthCalendarGrid.Children.Add(colorWeekend);
-            }
-            else if (modeView == ViewModes.Weeks)
-            {
-                //TODO: Check This
-                WeekCalendarGrid.Children.Add(colorWeekend);
+                DaysOfMonthCalendarGrid.Children.Add(colorWeekend);
             }
         }
 
@@ -151,13 +171,20 @@ namespace Proyecto_1
         {
             if (modeView == ViewModes.Months)
             {
-                DaysMonthCalendarGrid.Children.Clear();
+                DaysOfMonthCalendarGrid.Children.Clear();
                 AddColorToCalendar(calendarLargeMonths, sundayColumn);
             }
             else if (modeView == ViewModes.Weeks)
             {
-                WeekCalendarGrid.Children.Clear();
+                //WeekCalendarGrid.Children.Clear();
             }
+        }
+
+        public void ResetCalendar()
+        {
+            ChangeTitle();
+            CleanCalendar();
+            CreateCalendar();
         }
 
         public void DisplayAppointmentFormView()
@@ -214,9 +241,7 @@ namespace Proyecto_1
             {
                 targetedDate = targetedDate.AddDays(7);
             }
-            CleanCalendar();
-            ChangeTitle();
-            CreateCalendar();
+            ResetCalendar();
         }
         private void Btn_ChangeNegative(object sender, RoutedEventArgs e)
         {
@@ -230,10 +255,8 @@ namespace Proyecto_1
             {
                 targetedDate = targetedDate.AddDays(-oneWeekOnDays);
             }
-            
-            CleanCalendar();
-            ChangeTitle();
-            CreateCalendar();
+
+            ResetCalendar();
 
         }
         private void CB_ChangeViewMode(object sender, SelectionChangedEventArgs e)
@@ -254,6 +277,7 @@ namespace Proyecto_1
         {
             CheckVisibility();
             ChangeToDayOne();
+            ResetCalendar();
         }
 
         private void Btn_CreateAppointment(object sender, RoutedEventArgs e)
