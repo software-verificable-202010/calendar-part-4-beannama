@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="appointments.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Remove="AppointmentPage.xaml" />
   </ItemGroup>
 

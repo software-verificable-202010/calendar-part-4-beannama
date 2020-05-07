@@ -13,7 +13,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.IO;
+using System.Xml.Serialization;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Proyecto_1
 {
@@ -24,6 +29,7 @@ namespace Proyecto_1
     {
         //Consts
         static readonly int firstDayOfMonth = 1;
+        static readonly string jsonFilePath = Environment.CurrentDirectory + "\\appointments.txt";
 
         readonly int  saturdayColumn = 5;
         readonly int sundayColumn = 6;
@@ -59,6 +65,7 @@ namespace Proyecto_1
         public MainWindow()
         {
             InitializeComponent();
+            appointments = DeserializeJSON(jsonFilePath);
             CreateCalendar();
         }
 
@@ -196,6 +203,30 @@ namespace Proyecto_1
         }
 
         //Useful Methods
+        public void SerializeJSON(List<Appointment> appointments, string filepath)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(filepath, FileMode.Create, FileAccess.Write);
+            formatter.Serialize(stream, appointments);
+            stream.Close();          
+        }
+        public List<Appointment> DeserializeJSON(string filepath)
+        {
+            List<Appointment> appointments = new List<Appointment>();
+            IFormatter formatter = new BinaryFormatter();
+            if (File.Exists(filepath))
+            {
+                Stream stream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+                appointments = (List<Appointment>)formatter.Deserialize(stream);
+                stream.Close();
+                return appointments;
+            }
+            else
+            {
+                return appointments;
+            }
+        }
+
         public void ResetCalendar()
         {
             ChangeTitle();
@@ -275,6 +306,7 @@ namespace Proyecto_1
             int minuteReturned = auxMinute;
 
             if (auxMinute == indexFor0) minuteReturned = 0;
+            else if (auxMinute == indexFor15) minuteReturned = 15;
             else if (auxMinute == indexFor30) minuteReturned = 30;
             else if (auxMinute == indexFor45) minuteReturned = 45;
             return minuteReturned;
@@ -385,7 +417,9 @@ namespace Proyecto_1
         private void Btn_ClickSaveForm(object sender, RoutedEventArgs e)
         {
             //TODO:Store the data
+            
             StoreAppointmentForm();
+            SerializeJSON(appointments, jsonFilePath);
             ClearAppointmentForm();
 
         }
