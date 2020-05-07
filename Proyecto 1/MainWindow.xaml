@@ -70,7 +70,7 @@
         </Grid>
 
         <Grid x:Name="MonthCalendarGrid"
-              Grid.Row="1">
+              Grid.Row="1" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="185*"/>
@@ -167,6 +167,7 @@
               Grid.Row="1" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="185*"/>
             </Grid.RowDefinitions>
 
@@ -186,7 +187,6 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -234,8 +234,31 @@
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi"/>
             </Grid>
+            <Grid x:Name="NumberOfWeekWeekCalendarGrid" 
+              Grid.Row="1" 
+              Background="SteelBlue"
+              Visibility="Visible">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+
+
+                
+            </Grid>
             <Grid x:Name="TimesOfDaysWeekCalendarGrid"
-              Grid.Row="1"
+              Grid.Row="2"
               Background="White"
               ShowGridLines="True"
               Visibility="Visible">
