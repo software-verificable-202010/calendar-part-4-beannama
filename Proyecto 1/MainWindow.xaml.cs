@@ -24,13 +24,28 @@ namespace Proyecto_1
     {
         //Consts
         static readonly int firstDayOfMonth = 1;
-        int saturdayColumn = 5;
-        int sundayColumn = 6;
-        int numberLabelWidth = 30;
-        int numberLabelHeight = 240;
-        int oneWeekOnDays = 7;
-        int sizeForWeekLabel = 24;
-        public int calendarLargeMonths = 7;
+
+        readonly int  saturdayColumn = 5;
+        readonly int sundayColumn = 6;
+
+        readonly int numberLabelWidth = 30;
+        readonly int numberLabelHeight = 240;
+        readonly int oneWeekOnDays = 7;
+        readonly int sizeForWeekLabel = 24;
+        readonly int calendarLargeMonths = 7;
+
+        readonly int addIfPMHour = 12;
+        readonly int oneHour = 1;
+        readonly int pmSelected = 1;
+        readonly int noSeconds = 0;
+        readonly int indexFor0 = 0;
+        readonly int indexFor15 = 1;
+        readonly int indexFor30 = 2;
+        readonly int indexFor45 = 3;
+        readonly int startBeforeEndTime = -1;
+        readonly int fontSizeForFeedback = 24;
+
+        List<Appointment> appointments = new List<Appointment>();
 
         DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
         public enum ViewModes{ 
@@ -125,7 +140,7 @@ namespace Proyecto_1
                 {
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
-                    FontSize = 24,
+                    FontSize = sizeForWeekLabel,
                     Content = contentText,
                     Foreground = Brushes.White
                 };
@@ -166,12 +181,12 @@ namespace Proyecto_1
             }
         }
 
-
         public void CleanCalendar()
         {
             if (modeView == ViewModes.Months)
             {
                 DaysOfMonthCalendarGrid.Children.Clear();
+                AddColorToCalendar(calendarLargeMonths, saturdayColumn);
                 AddColorToCalendar(calendarLargeMonths, sundayColumn);
             }
             else if (modeView == ViewModes.Weeks)
@@ -180,13 +195,19 @@ namespace Proyecto_1
             }
         }
 
+        //Useful Methods
         public void ResetCalendar()
         {
             ChangeTitle();
             CleanCalendar();
             CreateCalendar();
         }
+        public void ChangeToDayOne()
+        {
+            targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
+        }
 
+        //Display Managment
         public void DisplayAppointmentFormView()
         {
             AppointmentContainerGrid.Visibility = Visibility.Visible;
@@ -208,7 +229,6 @@ namespace Proyecto_1
             AppointmentContainerGrid.Visibility = Visibility.Hidden;
             MonthCalendarGrid.Visibility = Visibility.Hidden;
         }
-
         public void CheckVisibility()
         {
             if (modeView == ViewModes.Months)
@@ -222,13 +242,84 @@ namespace Proyecto_1
 
         }
 
-        public void ChangeToDayOne()
-        {
-            targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
-        }
-
         
 
+        //Appointment Managment
+        public void ClearAppointmentForm()
+        {
+            TB_TitleAppointment.Text = String.Empty;
+            DatePicker_DateAppointment.SelectedDate = null;
+
+            CB_StartTimeHourAppointment.SelectedItem = null;
+            CB_StartTimeMinuteAppointment.SelectedItem = null;
+            CB_StartTimeAMPMAppointment.SelectedItem = null;
+
+            CB_EndTimeHourAppointment.SelectedItem = null;
+            CB_EndTimeMinuteAppointment.SelectedItem = null;
+            CB_EndTimeAMPMAppointment.SelectedItem = null;
+
+            TB_DescriptionAppointment.Text = String.Empty;
+
+            
+        }
+        public int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
+        {
+            int hourReturned = hour.SelectedIndex + oneHour;
+            if (AMPM.SelectedIndex == pmSelected) hourReturned += addIfPMHour;
+
+            return hourReturned;
+        }
+        public int ProcessMinuteForForm(ComboBox minute)
+        {
+            int auxMinute = minute.SelectedIndex;
+            int minuteReturned = auxMinute;
+
+            if (auxMinute == indexFor0) minuteReturned = 0;
+            else if (auxMinute == indexFor30) minuteReturned = 30;
+            else if (auxMinute == indexFor45) minuteReturned = 45;
+            return minuteReturned;
+        }
+        public void StoreAppointmentForm()
+        {
+            
+            string title = TB_TitleAppointment.Text;
+            DateTime date = DatePicker_DateAppointment.SelectedDate.Value;
+
+            int startHourAux = ProcessHourForForm(CB_StartTimeHourAppointment, CB_StartTimeAMPMAppointment);
+            int startMinuteAux = ProcessMinuteForForm(CB_StartTimeMinuteAppointment);
+            
+            DateTime startTime = new DateTime(date.Year, date.Month, date.Day, startHourAux, startMinuteAux, noSeconds);
+
+            int endHourAux = ProcessHourForForm(CB_EndTimeHourAppointment, CB_EndTimeAMPMAppointment);
+            int endMinuteAux = ProcessMinuteForForm(CB_EndTimeMinuteAppointment);
+
+            DateTime endTime = new DateTime(date.Year, date.Month, date.Day, endHourAux, endMinuteAux, noSeconds);
+
+
+            string description = TB_DescriptionAppointment.Text;
+            int comparison = TimeSpan.Compare(startTime.TimeOfDay, endTime.TimeOfDay);
+            try
+            {
+                
+                if (comparison != startBeforeEndTime)
+                {
+                    throw new Exception("End time is Before Start time");
+                }
+                Appointment appointment = new Appointment(title, date, startTime, endTime, description);
+                appointments.Add(appointment);
+                TextBlockFeedback.Text = "Saved!";
+                TextBlockFeedback.Foreground = Brushes.Green;
+                TextBlockFeedback.FontSize = fontSizeForFeedback;
+            }
+            catch
+            {
+                TextBlockFeedback.Text = "Error!";
+                TextBlockFeedback.Foreground = Brushes.Red;
+                TextBlockFeedback.FontSize = fontSizeForFeedback;
+            }
+        }
+
+        //Application Element Actions
         private void Btn_ChangePositive(object sender, RoutedEventArgs e)
         {
             CheckVisibility();
@@ -271,7 +362,6 @@ namespace Proyecto_1
             {
                 modeView = ViewModes.Weeks;
             }
-
         }
         private void CB_CloseDropdownView(object sender, EventArgs e)
         {
@@ -283,19 +373,21 @@ namespace Proyecto_1
         private void Btn_CreateAppointment(object sender, RoutedEventArgs e)
         {
             DisplayAppointmentFormView();
+            TextBlockFeedback.Text = String.Empty;
         }
 
         private void Btn_ClickCancelForm(object sender, RoutedEventArgs e)
         {
-            //TODO: Clean the Form
+            ClearAppointmentForm();
             CheckVisibility();
         }
 
         private void Btn_ClickSaveForm(object sender, RoutedEventArgs e)
         {
             //TODO:Store the data
-            //TODO:Clean the Form
-            CheckVisibility();
+            StoreAppointmentForm();
+            ClearAppointmentForm();
+
         }
     }
 }
