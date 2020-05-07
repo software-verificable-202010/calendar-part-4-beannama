@@ -27,33 +27,35 @@ namespace Proyecto_1
     /// </summary>
     public partial class MainWindow : Window
     {
+        
+        
+        
         //Consts
-        static readonly int firstDayOfMonth = 1;
-        static readonly string binaryFilePath = Environment.CurrentDirectory + "\\appointments.txt";
+        const int weeksInMonth = 6;
+        const int saturdayColumn = 5;
+        const int sundayColumn = 6;
+        const int numberLabelWidth = 30;
+        const int numberLabelHeight = 240;
+        const int oneWeekOnDays = 7;
+        const int sizeForWeekLabel = 24;
+        const int calendarLargeMonths = 7;
 
-        readonly int weeksInMonth = 6;
-        readonly int saturdayColumn = 5;
-        readonly int sundayColumn = 6;
-        readonly int numberLabelWidth = 30;
-        readonly int numberLabelHeight = 240;
-        readonly int oneWeekOnDays = 7;
-        readonly int sizeForWeekLabel = 24;
-        readonly int calendarLargeMonths = 7;
-
-        readonly int addIfPMHour = 12;
-        readonly int oneHour = 1;
-        readonly int pmSelected = 1;
-        readonly int noSeconds = 0;
-        readonly int indexFor0 = 0;
-        readonly int indexFor15 = 1;
-        readonly int indexFor30 = 2;
-        readonly int indexFor45 = 3;
-        readonly int startBeforeEndTime = -1;
-        readonly int fontSizeForFeedback = 24;
-
+        const int addIfPMHour = 12;
+        const int oneHour = 1;
+        const int pmSelected = 1;
+        const int noSeconds = 0;
+        const int indexFor0 = 0;
+        const int indexFor15 = 1;
+        const int indexFor30 = 2;
+        const int indexFor45 = 3;
+        const int startBeforeEndTime = -1;
+        const int fontSizeForFeedback = 24;
         List<int> weekNumbers = new List<int>();
+
+        static readonly string binaryFilePath = Environment.CurrentDirectory + "\\appointments.txt";
         List<Appointment> appointments = new List<Appointment>();
 
+        static readonly int firstDayOfMonth = 1;
         DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
         public enum ViewModes{ 
             Weeks,
@@ -101,7 +103,6 @@ namespace Proyecto_1
             MonthTextBlock.Text = targetedDate.ToString("MMMM");
             YearTextBlock.Text = targetedDate.Year.ToString();
         }
-
         public void CreateCalendar()
         {
             ChangeTitle();
@@ -222,9 +223,6 @@ namespace Proyecto_1
                 NumberOfWeekWeekCalendarGrid.Children.Clear();
             }
         }
-
-
-       
 
         //Useful Methods
         public void ResetCalendar()
