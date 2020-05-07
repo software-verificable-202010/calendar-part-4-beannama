@@ -29,17 +29,15 @@ namespace Proyecto_1
     {
         //Consts
         static readonly int firstDayOfMonth = 1;
-        static readonly string jsonFilePath = Environment.CurrentDirectory + "\\appointments.txt";
+        static readonly string binaryFilePath = Environment.CurrentDirectory + "\\appointments.txt";
 
         readonly int  saturdayColumn = 5;
         readonly int sundayColumn = 6;
-
         readonly int numberLabelWidth = 30;
         readonly int numberLabelHeight = 240;
         readonly int oneWeekOnDays = 7;
         readonly int sizeForWeekLabel = 24;
         readonly int calendarLargeMonths = 7;
-
         readonly int addIfPMHour = 12;
         readonly int oneHour = 1;
         readonly int pmSelected = 1;
@@ -65,7 +63,7 @@ namespace Proyecto_1
         public MainWindow()
         {
             InitializeComponent();
-            appointments = DeserializeJSON(jsonFilePath);
+            appointments = DeserializeAppointments(binaryFilePath);
             CreateCalendar();
         }
 
@@ -202,15 +200,15 @@ namespace Proyecto_1
             }
         }
 
-        //Useful Methods
-        public void SerializeJSON(List<Appointment> appointments, string filepath)
+        //Serialization Of Binary File
+        public void SerializeAppointments(List<Appointment> appointments, string filepath)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(filepath, FileMode.Create, FileAccess.Write);
             formatter.Serialize(stream, appointments);
             stream.Close();          
         }
-        public List<Appointment> DeserializeJSON(string filepath)
+        public List<Appointment> DeserializeAppointments(string filepath)
         {
             List<Appointment> appointments = new List<Appointment>();
             IFormatter formatter = new BinaryFormatter();
@@ -226,7 +224,7 @@ namespace Proyecto_1
                 return appointments;
             }
         }
-
+        //Useful Methods
         public void ResetCalendar()
         {
             ChangeTitle();
@@ -273,8 +271,6 @@ namespace Proyecto_1
 
         }
 
-        
-
         //Appointment Managment
         public void ClearAppointmentForm()
         {
@@ -313,25 +309,25 @@ namespace Proyecto_1
         }
         public void StoreAppointmentForm()
         {
-            
-            string title = TB_TitleAppointment.Text;
-            DateTime date = DatePicker_DateAppointment.SelectedDate.Value;
-
-            int startHourAux = ProcessHourForForm(CB_StartTimeHourAppointment, CB_StartTimeAMPMAppointment);
-            int startMinuteAux = ProcessMinuteForForm(CB_StartTimeMinuteAppointment);
-            
-            DateTime startTime = new DateTime(date.Year, date.Month, date.Day, startHourAux, startMinuteAux, noSeconds);
-
-            int endHourAux = ProcessHourForForm(CB_EndTimeHourAppointment, CB_EndTimeAMPMAppointment);
-            int endMinuteAux = ProcessMinuteForForm(CB_EndTimeMinuteAppointment);
-
-            DateTime endTime = new DateTime(date.Year, date.Month, date.Day, endHourAux, endMinuteAux, noSeconds);
-
-
-            string description = TB_DescriptionAppointment.Text;
-            int comparison = TimeSpan.Compare(startTime.TimeOfDay, endTime.TimeOfDay);
             try
             {
+                string title = TB_TitleAppointment.Text;
+                DateTime date = DatePicker_DateAppointment.SelectedDate.Value;
+
+                int startHourAux = ProcessHourForForm(CB_StartTimeHourAppointment, CB_StartTimeAMPMAppointment);
+                int startMinuteAux = ProcessMinuteForForm(CB_StartTimeMinuteAppointment);
+            
+                DateTime startTime = new DateTime(date.Year, date.Month, date.Day, startHourAux, startMinuteAux, noSeconds);
+
+                int endHourAux = ProcessHourForForm(CB_EndTimeHourAppointment, CB_EndTimeAMPMAppointment);
+                int endMinuteAux = ProcessMinuteForForm(CB_EndTimeMinuteAppointment);
+
+                DateTime endTime = new DateTime(date.Year, date.Month, date.Day, endHourAux, endMinuteAux, noSeconds);
+
+
+                string description = TB_DescriptionAppointment.Text;
+                int comparison = TimeSpan.Compare(startTime.TimeOfDay, endTime.TimeOfDay);
+            
                 
                 if (comparison != startBeforeEndTime)
                 {
@@ -401,25 +397,22 @@ namespace Proyecto_1
             ChangeToDayOne();
             ResetCalendar();
         }
-
         private void Btn_CreateAppointment(object sender, RoutedEventArgs e)
         {
             DisplayAppointmentFormView();
             TextBlockFeedback.Text = String.Empty;
         }
-
         private void Btn_ClickCancelForm(object sender, RoutedEventArgs e)
         {
             ClearAppointmentForm();
             CheckVisibility();
         }
-
         private void Btn_ClickSaveForm(object sender, RoutedEventArgs e)
         {
             //TODO:Store the data
             
             StoreAppointmentForm();
-            SerializeJSON(appointments, jsonFilePath);
+            SerializeAppointments(appointments, binaryFilePath);
             ClearAppointmentForm();
 
         }

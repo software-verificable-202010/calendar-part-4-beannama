@@ -173,7 +173,6 @@
             <Grid x:Name="DaysOfWeekWeekCalendarGrid" 
               Grid.Row="0" 
               Background="SteelBlue"
-              ShowGridLines="True" 
               Visibility="Visible">
 
                 <Grid.ColumnDefinitions>
