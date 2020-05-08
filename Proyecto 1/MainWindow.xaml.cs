@@ -13,10 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.IO;
-using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -27,19 +24,13 @@ namespace Proyecto_1
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-        
-        
         //Consts
         const int weeksInMonth = 6;
         const int saturdayColumn = 5;
         const int sundayColumn = 6;
-        const int numberLabelWidth = 30;
-        const int numberLabelHeight = 240;
-        const int oneWeekOnDays = 7;
-        const int sizeForWeekLabel = 24;
         const int calendarLargeMonths = 7;
 
+        const int oneWeekOnDays = 7;
         const int addIfPMHour = 12;
         const int oneHour = 1;
         const int pmSelected = 1;
@@ -49,10 +40,17 @@ namespace Proyecto_1
         const int indexFor30 = 2;
         const int indexFor45 = 3;
         const int startBeforeEndTime = -1;
-        const int fontSizeForFeedback = 24;
-        List<int> weekNumbers = new List<int>();
 
-        static readonly string binaryFilePath = Environment.CurrentDirectory + "\\appointments.txt";
+        const int numberLabelWidth = 30;
+        const int numberLabelHeight = 240;
+        const int fontSizeForFeedbackLabel = 24;
+        const int sizeForWeekLabel = 24;
+        const int sizeForAppointmentLabel = 12;
+
+        List<int> weekNumbers = new List<int>();
+        List<Appointment> weekAppointments = new List<Appointment>();
+
+        readonly string binaryFilePath = Environment.CurrentDirectory + "\\appointments.txt";
         List<Appointment> appointments = new List<Appointment>();
 
         static readonly int firstDayOfMonth = 1;
@@ -95,9 +93,8 @@ namespace Proyecto_1
             }
         }
 
-
-
-        //Views Creation
+ 
+        //CalendarCreation
         public void ChangeTitle()
         {
             MonthTextBlock.Text = targetedDate.ToString("MMMM");
@@ -107,25 +104,131 @@ namespace Proyecto_1
         {
             ChangeTitle();
 
+            AddDaysToCalendar();
+            AddAppointmentsToCalendar();
+
+        }
+        //Appointment View Creation
+        public void AddAppointmentsToCalendar()
+        {
             DateTime auxiliarDate = targetedDate;
             if (modeView == ViewModes.Months)
             {
                 for (int weekNumber = 0; weekNumber < weeksInMonth; weekNumber++)
                 {
-                    FillListWithNumbers(weekNumbers, auxiliarDate);
-                    FillWeekWithNumber(weekNumber, weekNumbers);
+                    FillWeekListWithAppointments(weekAppointments, auxiliarDate);
+                    FillWeekWithAppointment(weekNumber, weekAppointments);
+                    
+                    weekAppointments.Clear();
+
                     auxiliarDate = auxiliarDate.AddDays(oneWeekOnDays);
+                }
+                
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+
+            }
+        }
+        public void FillWeekListWithAppointments(List<Appointment> weekAppointments, DateTime targetedDate)
+        {
+            int month = targetedDate.Month;
+            int year = targetedDate.Year;
+            
+            for(int day = 1; day < DateTime.DaysInMonth(year,month); day++)
+            {
+                foreach (Appointment appointment in appointments)
+                {
+                    if (appointment.date.Year == year && appointment.date.Month == month && appointment.date.Day == day)
+                    {
+                        weekAppointments.Add(appointment);
+                    }
+                }
+            }
+        }
+        public void FillWeekWithAppointment(int rowNumber, List<Appointment> weekAppointments)
+        {
+            int dayColumn;
+            foreach (Appointment appointment in weekAppointments)
+            {
+                dayColumn = (int)appointment.date.DayOfWeek;
+                Label appointmentLabel = CreateAppointmentLabel(appointment);
+                AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
+                dayColumn++;
+            }
+
+        }
+        public void AddAppointmentToDay(Label appointmenLabel, int targetedRow, int targetedCol)
+        {
+            if (modeView == ViewModes.Months)
+            {
+                Grid.SetColumn(appointmenLabel, targetedCol);
+                Grid.SetRow(appointmenLabel, targetedRow);
+                DaysOfMonthCalendarGrid.Children.Add(appointmenLabel);
+
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                
+            }
+
+        }
+        public Label CreateAppointmentLabel(Appointment appointment)
+        {
+            Label label = new Label();
+            string title = appointment.title;
+            string startTime = appointment.startTime.ToString("HH:mm");
+            string endTime = appointment.endTime.ToString("HH:mm");
+            string description = appointment.description;
+
+            string appointmentString = title + "\n" + description + "\n" + startTime + "-" + endTime;
+            if (modeView == ViewModes.Months)
+            {
+                label = new Label
+                {
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    FontSize = sizeForAppointmentLabel,
+                    Content = appointmentString
+                };
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                label = new Label
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = sizeForAppointmentLabel,
+                    Content = appointmentString
+                };
+            }
+
+            return label;
+        }
+
+        //Days View Creation
+        public void AddDaysToCalendar()
+        {
+            DateTime auxiliarDate = targetedDate;
+            if (modeView == ViewModes.Months)
+            {
+                for (int weekNumber = 0; weekNumber < weeksInMonth; weekNumber++)
+                {
+                    FillWeekListWithNumbers(weekNumbers, auxiliarDate);
+                    FillWeekWithNumber(weekNumber, weekNumbers);
                     weekNumbers.Clear();
+
+                    auxiliarDate = auxiliarDate.AddDays(oneWeekOnDays);
                 }
             }
             else if (modeView == ViewModes.Weeks)
             {
-                FillListWithNumbers(weekNumbers, auxiliarDate);
+                FillWeekListWithNumbers(weekNumbers, auxiliarDate);
                 FillWeekWithNumber(1, weekNumbers);
                 weekNumbers.Clear();
             }
         }
-        public void FillListWithNumbers(List<int> listNumber, DateTime targetedDate)
+        public void FillWeekListWithNumbers(List<int> listNumber, DateTime targetedDate)
         {
             DateTime auxDate = targetedDate;
             int daysDiffFromMonday = 0;
@@ -150,8 +253,38 @@ namespace Proyecto_1
             foreach (int number in listNumber)
             {
                 Label numberLabel = CreateNumberLabel(number.ToString());
-                AddElementToCalendar(numberLabel, rowNumber, counter);
+                AddNumberToDay(numberLabel, rowNumber, counter);
                 counter++;
+            }
+        }
+        public void AddNumberToDay(Label numberLabel, int targetedRow, int targetedCol)
+        {
+
+            if (modeView == ViewModes.Months)
+            {
+                Grid grid = new Grid { Name = "DayGrid" };
+                RowDefinition rowDefinitionAuto = new RowDefinition
+                {
+                    Height = GridLength.Auto
+                };
+                RowDefinition rowDefinitionStar = new RowDefinition
+                {
+                    Height = new GridLength(1, GridUnitType.Star)
+                };
+                grid.RowDefinitions.Add(rowDefinitionAuto);
+                grid.RowDefinitions.Add(rowDefinitionStar);
+                Grid.SetColumn(grid, targetedCol);
+                Grid.SetRow(grid, targetedRow);
+                grid.Children.Add(numberLabel);
+
+                DaysOfMonthCalendarGrid.Children.Add(grid);
+
+            }
+            else if (modeView == ViewModes.Weeks)
+            {
+                Grid.SetColumn(numberLabel, targetedCol + 1);
+                Grid.SetRow(numberLabel, 1);
+                NumberOfWeekWeekCalendarGrid.Children.Add(numberLabel);
             }
         }
         public Label CreateNumberLabel(string contentText)
@@ -181,21 +314,8 @@ namespace Proyecto_1
             }
             return label;
         }
-        public void AddElementToCalendar(Label numberLabel, int targetedRow, int targetedCol)
-        {
-            if (modeView == ViewModes.Months)
-            {
-                Grid.SetColumn(numberLabel, targetedCol);
-                Grid.SetRow(numberLabel, targetedRow);
-                DaysOfMonthCalendarGrid.Children.Add(numberLabel);
-            }
-            else if (modeView == ViewModes.Weeks)
-            {
-                Grid.SetColumn(numberLabel, targetedCol + 1);
-                Grid.SetRow(numberLabel, 1);
-                NumberOfWeekWeekCalendarGrid.Children.Add(numberLabel);
-            }
-        }
+
+
         public void AddColorToCalendar(int calendarLarge, int targetedCol)
         {
             Border colorWeekend = new Border
@@ -210,6 +330,8 @@ namespace Proyecto_1
                 DaysOfMonthCalendarGrid.Children.Add(colorWeekend);
             }
         }
+
+        //Calendars Views Managment
         public void CleanCalendar()
         {
             if (modeView == ViewModes.Months)
@@ -223,20 +345,12 @@ namespace Proyecto_1
                 NumberOfWeekWeekCalendarGrid.Children.Clear();
             }
         }
-
-        //Useful Methods
         public void ResetCalendar()
         {
             ChangeTitle();
             CleanCalendar();
             CreateCalendar();
         }
-        public void ChangeToDayOne()
-        {
-            targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
-        }
-
-        //Display Managment
         public void DisplayAppointmentFormView()
         {
             AppointmentContainerGrid.Visibility = Visibility.Visible;
@@ -269,6 +383,7 @@ namespace Proyecto_1
                 DisplayWeekView();
             }
         }
+
 
         //Appointment Managment
         public void ClearAppointmentForm()
@@ -336,18 +451,18 @@ namespace Proyecto_1
                 appointments.Add(appointment);
                 TextBlockFeedback.Text = "Saved!";
                 TextBlockFeedback.Foreground = Brushes.Green;
-                TextBlockFeedback.FontSize = fontSizeForFeedback;
+                TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
             }
             catch
             {
                 TextBlockFeedback.Text = "Error!";
                 TextBlockFeedback.Foreground = Brushes.Red;
-                TextBlockFeedback.FontSize = fontSizeForFeedback;
+                TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
             }
         }
 
         //Application Element Actions
-        private void Btn_ChangePositive(object sender, RoutedEventArgs e)
+        private void MoveForwardButton_Click(object sender, RoutedEventArgs e)
         {
             CheckVisibility();
 
@@ -361,7 +476,7 @@ namespace Proyecto_1
             }
             ResetCalendar();
         }
-        private void Btn_ChangeNegative(object sender, RoutedEventArgs e)
+        private void MoveBackwardButton_Click(object sender, RoutedEventArgs e)
         {
             CheckVisibility();
             
@@ -375,7 +490,7 @@ namespace Proyecto_1
             }
             ResetCalendar();
         }
-        private void CB_ChangeViewMode(object sender, SelectionChangedEventArgs e)
+        private void ChangeViewModComboBox(object sender, SelectionChangedEventArgs e)
         {
             int monthIndex = 0;
             int weekIndex = 1;
@@ -388,23 +503,23 @@ namespace Proyecto_1
                 modeView = ViewModes.Weeks;
             }
         }
-        private void CB_CloseDropdownView(object sender, EventArgs e)
+        private void CloseDropdownViewComboBox(object sender, EventArgs e)
         {
             CheckVisibility();
-            ChangeToDayOne();
+            targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
             ResetCalendar();
         }
-        private void Btn_CreateAppointment(object sender, RoutedEventArgs e)
+        private void CreateAppointmentButton_Click(object sender, RoutedEventArgs e)
         {
             DisplayAppointmentFormView();
             TextBlockFeedback.Text = String.Empty;
         }
-        private void Btn_ClickCancelForm(object sender, RoutedEventArgs e)
+        private void CancelForm_Click(object sender, RoutedEventArgs e)
         {
             ClearAppointmentForm();
             CheckVisibility();
         }
-        private void Btn_ClickSaveForm(object sender, RoutedEventArgs e)
+        private void SaveFormClick(object sender, RoutedEventArgs e)
         {
             StoreAppointmentForm();
             SerializeAppointments(appointments, binaryFilePath);

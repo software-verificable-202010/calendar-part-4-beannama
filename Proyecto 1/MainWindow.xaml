@@ -44,7 +44,7 @@
             <ComboBox Name="CB_Mode"
                       Grid.Column="3" 
                       HorizontalAlignment="Center" VerticalAlignment="Center" 
-                      SelectedIndex="0" SelectionChanged="CB_ChangeViewMode" FontSize="22" DropDownClosed="CB_CloseDropdownView">
+                      SelectedIndex="0" SelectionChanged="ChangeViewModComboBox" FontSize="22" DropDownClosed="CloseDropdownViewComboBox">
                 <ComboBoxItem Tag="Months" x:Name="Months" 
                     Content="Months">
                 </ComboBoxItem>
@@ -55,17 +55,17 @@
                 VerticalAlignment="Center"  HorizontalAlignment="Left"
                 Grid.Column="4"  
                 FontSize="72" FontFamily="Berlin Sans FB Demi" 
-                IsCancel="True" Click="Btn_ChangeNegative" />
+                IsCancel="True" Click="MoveBackwardButton_Click" />
             <Button x:Name="Btn_Apointment"
                 VerticalAlignment="Center"  HorizontalAlignment="Center"
                 Grid.Column="4"  
                 FontSize="16" FontFamily="Berlin Sans FB Demi" 
-                IsCancel="True"  Content="Create Appointment" Click="Btn_CreateAppointment"/>
+                IsCancel="True"  Content="Create Appointment" Click="CreateAppointmentButton_Click"/>
             <Button Content="&gt;"
                 Grid.Column="4" 
                 VerticalAlignment="Center"  HorizontalAlignment="Right"
                 FontSize="72" FontFamily="Berlin Sans FB Demi"
-                IsCancel="True" Click="Btn_ChangePositive" />
+                IsCancel="True" Click="MoveForwardButton_Click" />
 
         </Grid>
 
@@ -159,6 +159,8 @@
                 <Border Background="AliceBlue"
                     Grid.RowSpan="7"
                     Grid.Column="5"/>
+
+                
 
             </Grid>
         </Grid>
@@ -603,13 +605,13 @@
                 <Button x:Name="Btn_CancelForm"
                     Grid.Row="5" Grid.Column="1" 
                     Content="Cancel" FontSize="36" 
-                    Background="PaleVioletRed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Btn_ClickCancelForm">
+                    Background="PaleVioletRed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="CancelForm_Click">
 
                 </Button>
                 <Button x:Name="Btn_SaveForm"
                     Grid.Row="5" Grid.Column="2"
                     Content="Save" FontSize="36"
-                    Background="SteelBlue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Btn_ClickSaveForm">
+                    Background="SteelBlue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="SaveFormClick">
 
                 </Button>
             </Grid>
