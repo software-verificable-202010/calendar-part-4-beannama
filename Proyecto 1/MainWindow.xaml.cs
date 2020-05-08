@@ -517,6 +517,7 @@ namespace Proyecto_1
         private void CancelForm_Click(object sender, RoutedEventArgs e)
         {
             ClearAppointmentForm();
+            ResetCalendar();
             CheckVisibility();
         }
         private void SaveFormClick(object sender, RoutedEventArgs e)
