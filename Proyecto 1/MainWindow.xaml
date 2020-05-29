@@ -18,8 +18,35 @@
             <RowDefinition Height="185*"/>
         </Grid.RowDefinitions>
 
+        <Grid x:Name="LoginGrid"
+              Grid.Row="1"
+            >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock 
+                   Text="Account Login" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Grid.Row="0"
+                   Foreground="SteelBlue" FontSize="72" FontFamily="Berlin Sans FB Demi" />
+            <TextBox x:Name="TB_Email"
+                   Grid.Row="1"
+                   Text="" 
+                   VerticalAlignment="Top" HorizontalAlignment="Stretch" 
+                   Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+            <TextBlock  x:Name="LoginFeedback_Text"
+                   Text="" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Grid.Row="1"
+                   FontSize="36" FontFamily="Berlin Sans FB Demi" />
+            <Button 
+                   Content=" Login " VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                   Grid.Row="1"
+                   Foreground="White" FontSize="48" FontFamily="Berlin Sans FB Demi" Background="SteelBlue" Click="LoginButton_Click" />
+        </Grid>
+        
         <Grid x:Name="NavigationGrid"
-              Grid.Row="0"
+              Grid.Row="0" Visibility="Hidden"
             >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -29,9 +56,13 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <TextBlock x:Name="EmailTextBlock" 
+                   Text="Email" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Grid.Column="0"
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
             <TextBlock x:Name="MonthTextBlock" 
                    Text="Month " VerticalAlignment="Center" HorizontalAlignment="Center" 
-                   Grid.Column="0"
+                   Grid.Column="1"
                    Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" />
             <TextBlock x:Name="YearTextBlock" 
                    Text="Year" VerticalAlignment="Center" HorizontalAlignment="Center" 
@@ -70,7 +101,7 @@
         </Grid>
 
         <Grid x:Name="MonthCalendarGrid"
-              Grid.Row="1" Visibility="Visible">
+              Grid.Row="1" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="185*"/>
