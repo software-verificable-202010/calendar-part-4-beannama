@@ -15,7 +15,7 @@ namespace Proyecto_1
         public DateTime EndTime { get; set; }
         public string Description { get; set; }
 
-        public List<User> InvitedUsers { get; set; } = new List<User>();
+        public List<User> InvitedUsers { get; } = new List<User>();
 
 
 

@@ -74,7 +74,6 @@ namespace Proyecto_1
             appointments = DeserializeAppointments(binaryFilePath);
             users = DeserializeUsers(usersFilePath);
 
-            CreateCalendar();
         }
 
         #region Serializations
@@ -174,11 +173,20 @@ namespace Proyecto_1
             int month = targetedDate.Month;
             int year = targetedDate.Year;
             
-            for(int day = 1; day < DateTime.DaysInMonth(year,month); day++)
+            DateTime auxDate = targetedDate;
+            int daysDiffFromMonday = 0;
+
+            while (auxDate.DayOfWeek.ToString() != "Monday")
             {
+                daysDiffFromMonday += 1;
+                auxDate = auxDate.AddDays(-1);
+            }
+            for (int day = targetedDate.Day; day <= (auxDate.Day + oneWeekOnDays); day++)
+            {
+                Console.WriteLine("escopetazo");
                 foreach (Appointment appointment in appointments)
                 {
-
+                    
                     if (appointment.Date.Year == year && appointment.Date.Month == month && appointment.Date.Day == day)
                     {
                         weekAppointments.Add(appointment);
@@ -443,6 +451,10 @@ namespace Proyecto_1
 
         bool IsValidEmail(string email)
         {
+            if (email == "")
+            {
+                return false;
+            }
             try
             {
                 var addr = new System.Net.Mail.MailAddress(email);
