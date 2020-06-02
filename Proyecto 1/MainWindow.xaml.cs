@@ -60,6 +60,7 @@ namespace Proyecto_1
         private List<int> weekNumbers = new List<int>();
         private List<Appointment> weekAppointments = new List<Appointment>();
         private List<Appointment> appointments = new List<Appointment>();
+        private User logedUser;
         private List<User> users = new List<User>();
 
         public enum ViewMode{ 
@@ -174,19 +175,15 @@ namespace Proyecto_1
             int year = targetedDate.Year;
             
             DateTime auxDate = targetedDate;
-            int daysDiffFromMonday = 0;
 
             while (auxDate.DayOfWeek.ToString() != "Monday")
             {
-                daysDiffFromMonday += 1;
                 auxDate = auxDate.AddDays(-1);
             }
             for (int day = targetedDate.Day; day <= (auxDate.Day + oneWeekOnDays); day++)
             {
-                Console.WriteLine("escopetazo");
                 foreach (Appointment appointment in appointments)
                 {
-                    
                     if (appointment.Date.Year == year && appointment.Date.Month == month && appointment.Date.Day == day)
                     {
                         weekAppointments.Add(appointment);
@@ -283,12 +280,10 @@ namespace Proyecto_1
         {
             if (listNumber == null) { return; }
             DateTime auxDate = targetedDate;
-            int daysDiffFromMonday = 0;
             int numberToFill;
 
             while (auxDate.DayOfWeek.ToString() != "Monday")
             {
-                daysDiffFromMonday += 1;
                 auxDate = auxDate.AddDays(-1);
             }
             numberToFill = auxDate.Day;
@@ -451,7 +446,7 @@ namespace Proyecto_1
 
         bool IsValidEmail(string email)
         {
-            if (email == "")
+            if (email =="")
             {
                 return false;
             }
@@ -528,7 +523,7 @@ namespace Proyecto_1
                 }
 
                 //TODO: USERS IN APPOINTMENTS.
-                Appointment appointment = new Appointment(title, date, startTime, endTime, description, null);
+                Appointment appointment = new Appointment(title, date, startTime, endTime, description,logedUser, null);
                 appointments.Add(appointment);
 
                 
@@ -635,6 +630,7 @@ namespace Proyecto_1
             {
                 StoreUserEmailForm();
                 SerializeUsers(users, usersFilePath);
+                logedUser = new User(email);
                 HideLoginView();
                 CreateCalendar();
             }
