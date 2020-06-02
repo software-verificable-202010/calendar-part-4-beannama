@@ -62,6 +62,7 @@ namespace Proyecto_1
         private List<Appointment> appointments = new List<Appointment>();
         private User logedUser;
         private List<User> users = new List<User>();
+        private List<User> appointmentUsers = new List<User>();
 
         public enum ViewMode{ 
             Weeks,
@@ -557,6 +558,12 @@ namespace Proyecto_1
                 LoginFeedback_Text.FontSize = fontSizeForFeedbackLabel;
             }
         }
+        private void ApplyDataBinding()
+        {
+            LB_UsersAvailable.ItemsSource = null;
+            appointmentUsers = users;
+            LB_UsersAvailable.ItemsSource = appointmentUsers;
+        }
 
         #region ClicksOnButtons
         private void MoveForwardButton_Click(object sender, RoutedEventArgs e)
@@ -608,6 +615,8 @@ namespace Proyecto_1
         }
         private void CreateAppointmentButton_Click(object sender, RoutedEventArgs e)
         {
+            ApplyDataBinding();
+            LB_UsersAvailable.ItemsSource = appointmentUsers;
             DisplayAppointmentFormView();
             TextBlockFeedback.Text = String.Empty;
         }
@@ -642,6 +651,31 @@ namespace Proyecto_1
             }
             
         }
+        private void AddUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
+        {
+            List<User> invitedUsers = new List<User>();
+            string currentItemText = LB_UsersAvailable.SelectedItem.ToString();
+            int currentItemIndex = LB_UsersAvailable.SelectedIndex;
+
+            LB_UsersInvited.Items.Add(currentItemText);
+            if (appointmentUsers != null)
+            {
+                appointmentUsers.RemoveAt(currentItemIndex);
+            }
+            ApplyDataBinding();
+        }
+        private void RemoveUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
+        {
+            string currentItemText = LB_UsersInvited.SelectedItem.ToString();
+            int currentItemIndex = LB_UsersInvited.SelectedIndex;
+            appointmentUsers.Add(new User(currentItemText));
+
+            LB_UsersInvited.Items.RemoveAt(LB_UsersInvited.Items.IndexOf(LB_UsersInvited.SelectedItem));
+            ApplyDataBinding();
+        }
         #endregion
+
+
+
     }
 }

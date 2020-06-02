@@ -14,5 +14,9 @@ namespace Proyecto_1
             Email = email;
         }
 
+        public override string ToString()
+        {
+            return Email;
+        }
     }
 }

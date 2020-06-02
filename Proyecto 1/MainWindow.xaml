@@ -44,7 +44,7 @@
                    Grid.Row="1"
                    Foreground="White" FontSize="48" FontFamily="Berlin Sans FB Demi" Background="SteelBlue" Click="LoginButton_Click" />
         </Grid>
-        
+
         <Grid x:Name="NavigationGrid"
               Grid.Row="0" Visibility="Hidden"
             >
@@ -191,11 +191,11 @@
                     Grid.RowSpan="7"
                     Grid.Column="5"/>
 
-                
+
 
             </Grid>
         </Grid>
-        
+
         <Grid x:Name="WeekCalendarGrid"
               Grid.Row="1" Visibility="Hidden">
             <Grid.RowDefinitions>
@@ -223,7 +223,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-               
+
 
                 <TextBlock  
                    Grid.Row="0" Grid.Column="0"
@@ -235,7 +235,7 @@
                    Text="Monday" 
                    VerticalAlignment="Center" HorizontalAlignment="Center" 
                    Foreground="White" FontSize="18" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
-                
+
                 <TextBlock x:Name="TuesdayWeekTextBlock" 
                    Grid.Row="0" Grid.Column="2"
                    Text="Tuesday"
@@ -288,7 +288,7 @@
 
 
 
-                
+
             </Grid>
             <Grid x:Name="TimesOfDaysWeekCalendarGrid"
               Grid.Row="2"
@@ -457,13 +457,14 @@
             </Grid>
 
         </Grid>
-        
+
         <Grid x:Name="AppointmentContainerGrid"
               Background="White"
               Grid.Row="1" Visibility="Hidden"
             >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -495,7 +496,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
                 <TextBlock 
                    Grid.Row="0" Grid.Column="0"
                    Text="Title:" 
@@ -628,6 +629,33 @@
                    Text="" 
                    VerticalAlignment="Top" HorizontalAlignment="Stretch" 
                    Foreground="Black" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+
+                <TextBlock 
+                   Grid.Row="0" Grid.Column="2"
+                   Text="Invite people:" 
+                   VerticalAlignment="Top" HorizontalAlignment="Center" 
+                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                <ListBox x:Name="LB_UsersAvailable"
+                          Grid.Row="1" Grid.Column="2"
+                          >
+
+                </ListBox>
+                <Button x:Name="Btn_AddUserAppointment"
+                     Grid.Row="2" Grid.Column="2"
+                    Content="Add" FontSize="36"
+                    Background="SteelBlue" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="112,0,0,0" Click="AddUserOfAppointmentList_Click"
+                    />
+                <Button x:Name="Btn_RemoveUserAppointment"
+                     Grid.Row="2" Grid.Column="2"
+                    Content="Rmv" FontSize="36"
+                    Background="SteelBlue" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="240,0,0,0" Click="RemoveUserOfAppointmentList_Click"
+                    />
+                <ListBox Name="LB_UsersInvited"
+                          Grid.Row="3" Grid.Column="2"
+                          >
+
+                </ListBox>
+
                 <TextBlock x:Name="TextBlockFeedback" 
                    Grid.Row="5" Grid.Column="0"
                    Text="" 
@@ -649,12 +677,12 @@
 
 
         </Grid>
-        
-        
 
-        
-        
+
+
+
+
 
     </Grid>
-    
+
 </Window>
