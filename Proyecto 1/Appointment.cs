@@ -37,6 +37,10 @@ namespace Proyecto_1
             }
             
         }
+        public override string ToString()
+        {
+            return Title.ToString();
+        }
 
 
 

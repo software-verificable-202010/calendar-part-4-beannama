@@ -56,13 +56,15 @@ namespace Proyecto_1
 
         #endregion
 
+
         private DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
         private List<int> weekNumbers = new List<int>();
         private List<Appointment> weekAppointments = new List<Appointment>();
         private List<Appointment> appointments = new List<Appointment>();
         private User logedUser;
         private List<User> users = new List<User>();
-        private List<User> appointmentUsers = new List<User>();
+        private List<User> availableUsers = new List<User>();
+        private List<User> invitedUsers = new List<User>();
 
         public enum ViewMode{ 
             Weeks,
@@ -143,6 +145,7 @@ namespace Proyecto_1
 
             AddDaysToCalendar();
             AddAppointmentsToCalendar();
+
 
         }
 
@@ -403,12 +406,41 @@ namespace Proyecto_1
             CleanCalendar();
             CreateCalendar();
         }
+        public void DisplayAppointmentsManagmentView()
+        {
+            AppointmentFormGrid.Visibility = Visibility.Hidden;
+            AppointmentEditationGrid.Visibility = Visibility.Hidden;
+
+            if (Btn_AppointmentManagment.Content != "Back")
+            {
+                AppointmentContainerGrid.Visibility = Visibility.Visible;
+                Btn_AppointmentManagment.Content = "Back";
+                MonthCalendarGrid.Visibility = Visibility.Hidden;
+                WeekCalendarGrid.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                AppointmentContainerGrid.Visibility = Visibility.Hidden;
+
+                Btn_AppointmentManagment.Content = "Appointment \n Managment";
+                CheckVisibility();
+            }
+            
+        }
         public void DisplayAppointmentFormView()
         {
-            AppointmentContainerGrid.Visibility = Visibility.Visible;
+            AppointmentFormGrid.Visibility = Visibility.Visible;
+            AppointmentEditationGrid.Visibility = Visibility.Hidden;
+            //AppointmentContainerGrid.Visibility = Visibility.Visible;
 
-            MonthCalendarGrid.Visibility = Visibility.Hidden;
-            WeekCalendarGrid.Visibility = Visibility.Hidden;
+            //MonthCalendarGrid.Visibility = Visibility.Hidden;
+            //WeekCalendarGrid.Visibility = Visibility.Hidden;
+        }
+        public void DisplayEditAppointmentsView()
+        {
+            AppointmentEditationGrid.Visibility = Visibility.Visible;
+            AppointmentFormGrid.Visibility = Visibility.Hidden;
+
         }
         public void HideLoginView()
         {
@@ -442,12 +474,13 @@ namespace Proyecto_1
             {
                 DisplayWeekView();
             }
+
         }
         #endregion
 
         bool IsValidEmail(string email)
         {
-            if (email =="")
+            if (string.IsNullOrEmpty(email))
             {
                 return false;
             }
@@ -456,7 +489,7 @@ namespace Proyecto_1
                 var addr = new System.Net.Mail.MailAddress(email);
                 return addr.Address == email;
             }
-            catch(ArgumentException e) when (e.ParamName == "…")
+            catch(FormatException)
             {
                 return false;
             }
@@ -475,6 +508,9 @@ namespace Proyecto_1
             CB_EndTimeAMPMAppointment.SelectedItem = null;
 
             TB_DescriptionAppointment.Text = String.Empty;
+
+            LB_UsersInvited.ItemsSource = null;
+
         }
         public int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
         {
@@ -523,22 +559,21 @@ namespace Proyecto_1
                     throw new Exception();
                 }
 
-                //TODO: USERS IN APPOINTMENTS.
-                Appointment appointment = new Appointment(title, date, startTime, endTime, description,logedUser, null);
+                Appointment appointment = new Appointment(title, date, startTime, endTime, description, logedUser, invitedUsers);
                 appointments.Add(appointment);
 
-                
                 TextBlockFeedback.Text = "Saved!";
                 TextBlockFeedback.Foreground = Brushes.Green;
                 TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
             }
-            catch(ArgumentException e) when (e.ParamName == "…")
+            catch(InvalidOperationException)
             {
                 
                 TextBlockFeedback.Text = "Error!";
                 TextBlockFeedback.Foreground = Brushes.Red;
                 TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
             }
+
         }
         public void StoreUserEmailForm()
         {
@@ -546,7 +581,6 @@ namespace Proyecto_1
             {
                 
                 string email = TB_Email.Text;
-                //TODO: Check USERS IN APPOINTMENTS.
                 User user = new User(email);
                 users.Add(user);
             }
@@ -561,8 +595,12 @@ namespace Proyecto_1
         private void ApplyDataBinding()
         {
             LB_UsersAvailable.ItemsSource = null;
-            appointmentUsers = users;
-            LB_UsersAvailable.ItemsSource = appointmentUsers;
+            LB_Appointments.ItemsSource = null;
+            LB_UsersInvited.ItemsSource = null;
+            availableUsers = users;
+
+            LB_Appointments.ItemsSource = appointments;
+            LB_UsersAvailable.ItemsSource = availableUsers;
         }
 
         #region ClicksOnButtons
@@ -613,12 +651,21 @@ namespace Proyecto_1
             targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
             ResetCalendar();
         }
+
+        private void AppointmentManagmentButton_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayAppointmentsManagmentView();
+        }
         private void CreateAppointmentButton_Click(object sender, RoutedEventArgs e)
         {
             ApplyDataBinding();
-            LB_UsersAvailable.ItemsSource = appointmentUsers;
             DisplayAppointmentFormView();
             TextBlockFeedback.Text = String.Empty;
+        }
+        private void EditAppointmentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyDataBinding();
+            DisplayEditAppointmentsView();
         }
         private void CancelForm_Click(object sender, RoutedEventArgs e)
         {
@@ -631,6 +678,7 @@ namespace Proyecto_1
             StoreAppointmentForm();
             SerializeAppointments(appointments, binaryFilePath);
             ClearAppointmentForm();
+
         }
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
@@ -653,29 +701,69 @@ namespace Proyecto_1
         }
         private void AddUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
         {
-            List<User> invitedUsers = new List<User>();
-            string currentItemText = LB_UsersAvailable.SelectedItem.ToString();
-            int currentItemIndex = LB_UsersAvailable.SelectedIndex;
-
-            LB_UsersInvited.Items.Add(currentItemText);
-            if (appointmentUsers != null)
+            try
             {
-                appointmentUsers.RemoveAt(currentItemIndex);
+                string currentItemText = LB_UsersAvailable.SelectedItem.ToString();
+                int currentItemIndex = LB_UsersAvailable.SelectedIndex;
+
+                LB_UsersInvited.Items.Add(currentItemText);
+                invitedUsers.Add(new User(currentItemText));
+
+                if (availableUsers != null)
+                {
+                    availableUsers.RemoveAt(currentItemIndex);
+                }
+                ApplyDataBinding();
+                TextBlockFeedback.Text = "";
             }
-            ApplyDataBinding();
+            catch (NullReferenceException)
+            {
+                TextBlockFeedback.Text = "Error!";
+            }
+            
         }
         private void RemoveUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
         {
+            
             string currentItemText = LB_UsersInvited.SelectedItem.ToString();
-            int currentItemIndex = LB_UsersInvited.SelectedIndex;
-            appointmentUsers.Add(new User(currentItemText));
+            availableUsers.Add(new User(currentItemText));
 
+            //TODO:Remove User from list
+            invitedUsers.Remove(new User(currentItemText));
             LB_UsersInvited.Items.RemoveAt(LB_UsersInvited.Items.IndexOf(LB_UsersInvited.SelectedItem));
             ApplyDataBinding();
         }
+
         #endregion
 
+        private void LB_Appointments_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(LB_Appointments.SelectedIndex != -1)
+            {
+                int currentItemIndex = LB_Appointments.SelectedIndex;
+                TB_EditAppointmentTitle.Text = appointments[currentItemIndex].ToString();
+            }
+        }
 
 
+        //TODO Apply Changes to Appointment
+        private void Btn_ApplyChangeAppointments_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                
+                int currentItemIndex = LB_Appointments.SelectedIndex;
+                Appointment selectedAppointment = appointments[currentItemIndex];
+
+                selectedAppointment.Title = TB_EditAppointmentTitle.Text;
+            }
+            catch(ArgumentException)
+            {
+
+            }
+            ApplyDataBinding();
+
+
+        }
     }
 }
