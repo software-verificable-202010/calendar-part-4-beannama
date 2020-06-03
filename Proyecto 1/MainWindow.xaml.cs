@@ -31,6 +31,8 @@ namespace Proyecto_1
         private const int saturdayColumn = 5;
         private const int sundayColumn = 6;
         private const int calendarLargeMonths = 7;
+        private const int sundayOnCalendar = 0;
+        private const int oneDay = 1;
 
         private const int oneWeekOnDays = 7;
         private const int addIfPMHour = 12;
@@ -59,8 +61,11 @@ namespace Proyecto_1
 
         private DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
         private List<int> weekNumbers = new List<int>();
+
         private List<Appointment> weekAppointments = new List<Appointment>();
         private List<Appointment> appointments = new List<Appointment>();
+        private List<Appointment> userAppointments = new List<Appointment>();
+
         private User logedUser;
         private List<User> users = new List<User>();
         private List<User> availableUsers = new List<User>();
@@ -77,7 +82,6 @@ namespace Proyecto_1
             InitializeComponent();
             appointments = DeserializeAppointments(binaryFilePath);
             users = DeserializeUsers(usersFilePath);
-
         }
 
         #region Serializations
@@ -145,8 +149,6 @@ namespace Proyecto_1
 
             AddDaysToCalendar();
             AddAppointmentsToCalendar();
-
-
         }
 
         #region Appointments in Calendar
@@ -159,9 +161,8 @@ namespace Proyecto_1
                 {
                     FillWeekListWithAppointments(weekAppointments, auxiliarDate);
                     FillWeekWithAppointment(weekNumber, weekAppointments);
-                    
-                    weekAppointments.Clear();
 
+                    weekAppointments.Clear();
 
                     auxiliarDate = auxiliarDate.AddDays(oneWeekOnDays);
                 }
@@ -184,13 +185,17 @@ namespace Proyecto_1
             {
                 auxDate = auxDate.AddDays(-1);
             }
-            for (int day = targetedDate.Day; day <= (auxDate.Day + oneWeekOnDays); day++)
+            for (int day = targetedDate.Day; day < (auxDate.Day + oneWeekOnDays); day++)
             {
                 foreach (Appointment appointment in appointments)
                 {
-                    if (appointment.Date.Year == year && appointment.Date.Month == month && appointment.Date.Day == day)
+                    if (appointment.Date.Year == year && 
+                        appointment.Date.Month == month && 
+                        appointment.Date.Day == day &&
+                        appointment.HasUser(logedUser))
                     {
                         weekAppointments.Add(appointment);
+                        userAppointments.Add(appointment);
                     }
                 }
             }
@@ -202,6 +207,14 @@ namespace Proyecto_1
             foreach (Appointment appointment in weekAppointments)
             {
                 dayColumn = (int)appointment.Date.DayOfWeek;
+                if(dayColumn != sundayOnCalendar)
+                {
+                    dayColumn -= oneDay;
+                }
+                else
+                {
+                    dayColumn = sundayColumn;
+                }
                 Label appointmentLabel = CreateAppointmentLabel(appointment);
                 AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
                 dayColumn++;
@@ -431,10 +444,9 @@ namespace Proyecto_1
         {
             AppointmentFormGrid.Visibility = Visibility.Visible;
             AppointmentEditationGrid.Visibility = Visibility.Hidden;
-            //AppointmentContainerGrid.Visibility = Visibility.Visible;
 
-            //MonthCalendarGrid.Visibility = Visibility.Hidden;
-            //WeekCalendarGrid.Visibility = Visibility.Hidden;
+            MonthCalendarGrid.Visibility = Visibility.Hidden;
+            WeekCalendarGrid.Visibility = Visibility.Hidden;
         }
         public void DisplayEditAppointmentsView()
         {
@@ -445,7 +457,7 @@ namespace Proyecto_1
         public void HideLoginView()
         {
             string emailUser = TB_Email.Text.Split("@")[0];
-            EmailTextBlock.Text = emailUser;
+            EmailTextBlock.Text = string.Format(CultureInfo.CurrentCulture,"Welcome\n "+ emailUser);
             NavigationGrid.Visibility = Visibility.Visible;
             LoginGrid.Visibility = Visibility.Hidden;
             CheckVisibility();
@@ -550,11 +562,9 @@ namespace Proyecto_1
 
                 DateTime endTime = new DateTime(date.Year, date.Month, date.Day, endHourAux, endMinuteAux, noSeconds);
 
-
                 string description = TB_DescriptionAppointment.Text;
+
                 int comparison = TimeSpan.Compare(startTime.TimeOfDay, endTime.TimeOfDay);
-            
-                
                 if (comparison != startBeforeEndTime) {
                     throw new Exception();
                 }
@@ -568,7 +578,6 @@ namespace Proyecto_1
             }
             catch(InvalidOperationException)
             {
-                
                 TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture, "Error");
                 TextBlockFeedback.Foreground = Brushes.Red;
                 TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
@@ -579,7 +588,6 @@ namespace Proyecto_1
         {
             try
             {
-                
                 string email = TB_Email.Text;
                 User user = new User(email);
                 users.Add(user);
@@ -599,8 +607,9 @@ namespace Proyecto_1
             LB_UsersInvited.ItemsSource = null;
             availableUsers = users;
 
-            LB_Appointments.ItemsSource = appointments;
+            LB_Appointments.ItemsSource = userAppointments;
             LB_UsersAvailable.ItemsSource = availableUsers;
+            
         }
 
         #region ClicksOnButtons
@@ -651,9 +660,9 @@ namespace Proyecto_1
             targetedDate = new DateTime(targetedDate.Year, targetedDate.Month, firstDayOfMonth);
             ResetCalendar();
         }
-
         private void AppointmentManagmentButton_Click(object sender, RoutedEventArgs e)
         {
+            ResetCalendar();
             DisplayAppointmentsManagmentView();
         }
         private void CreateAppointmentButton_Click(object sender, RoutedEventArgs e)
@@ -670,6 +679,7 @@ namespace Proyecto_1
         private void CancelForm_Click(object sender, RoutedEventArgs e)
         {
             ClearAppointmentForm();
+            Btn_AppointmentManagment.Content = "Appointment \n Managment";
             ResetCalendar();
             CheckVisibility();
         }
@@ -685,8 +695,13 @@ namespace Proyecto_1
             string email = TB_Email.Text;
             if (IsValidEmail(email))
             {
-                StoreUserEmailForm();
-                SerializeUsers(users, usersFilePath);
+                bool containsEmail = users.Any(item => item.Email == email);
+                
+                if (!containsEmail)
+                {
+                    StoreUserEmailForm();
+                    SerializeUsers(users, usersFilePath);
+                }
                 logedUser = new User(email);
                 HideLoginView();
                 CreateCalendar();
@@ -722,9 +737,12 @@ namespace Proyecto_1
             }
             
         }
+
+        #endregion
+
         private void RemoveUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
         {
-            
+
             string currentItemText = LB_UsersInvited.SelectedItem.ToString();
             availableUsers.Add(new User(currentItemText));
 
@@ -733,27 +751,31 @@ namespace Proyecto_1
             LB_UsersInvited.Items.RemoveAt(LB_UsersInvited.Items.IndexOf(LB_UsersInvited.SelectedItem));
             ApplyDataBinding();
         }
-
-        #endregion
-
         private void LB_Appointments_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(LB_Appointments.SelectedIndex != -1)
+            if (LB_Appointments.SelectedIndex != -1)
             {
                 int currentItemIndex = LB_Appointments.SelectedIndex;
-                TB_EditAppointmentTitle.Text = appointments[currentItemIndex].ToString();
+                Appointment currentAppointment = userAppointments[currentItemIndex];
+
+                TB_EditAppointmentTitle.Text = currentAppointment.ToString();
+                DatePicker_EditDateAppointment.SelectedDate = currentAppointment.Date;
+                TB_EditDescriptionAppointment.Text = currentAppointment.Description;
+
+                //TODO: Show Available users
+                LB_EditUserAvailable.ItemsSource = users;
+                LB_EditUserInvited.ItemsSource = currentAppointment.InvitedUsers;
+
             }
         }
-
 
         //TODO Apply Changes to Appointment
         private void Btn_ApplyChangeAppointments_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                
                 int currentItemIndex = LB_Appointments.SelectedIndex;
-                Appointment selectedAppointment = appointments[currentItemIndex];
+                Appointment selectedAppointment = userAppointments[currentItemIndex];
 
                 selectedAppointment.Title = TB_EditAppointmentTitle.Text;
             }

@@ -42,6 +42,28 @@ namespace Proyecto_1
             return Title;
         }
 
+        public bool HasUser(User user)
+        {
+            if (user == null)
+            {
+                return false;
+            }
+            if (Creator.Email == user.Email)
+            {
+                return true;
+            }
+            foreach (User inviteduser in InvitedUsers)
+            {
+                if (inviteduser.Email == user.Email)
+                {
+                    return true;
+                }
+
+            }
+            
+            return false;
+
+        }
 
 
 
