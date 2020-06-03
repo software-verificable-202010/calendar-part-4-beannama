@@ -51,8 +51,8 @@ namespace Proyecto_1
 
         private const int firstDayOfMonth = 1;
 
-        private readonly string binaryFilePath = string.Format("{0}\\appointments.txt", Environment.CurrentDirectory);
-        private readonly string usersFilePath = string.Format("{0}\\users.txt", Environment.CurrentDirectory);
+        private readonly string binaryFilePath = string.Format(CultureInfo.CurrentCulture,"{0}\\appointments.txt", Environment.CurrentDirectory);
+        private readonly string usersFilePath = string.Format(CultureInfo.CurrentCulture, "{0}\\users.txt", Environment.CurrentDirectory);
 
         #endregion
 
@@ -81,14 +81,14 @@ namespace Proyecto_1
         }
 
         #region Serializations
-        public void SerializeAppointments(List<Appointment> appointments, string filepath)
+        public static void SerializeAppointments(List<Appointment> appointments, string filepath)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(filepath, FileMode.Create, FileAccess.Write);
             formatter.Serialize(stream, appointments);
             stream.Close();
         }
-        public List<Appointment> DeserializeAppointments(string filepath)
+        public static List<Appointment> DeserializeAppointments(string filepath)
         {
             List<Appointment> appointments = new List<Appointment>();
             IFormatter formatter = new BinaryFormatter();
@@ -105,7 +105,7 @@ namespace Proyecto_1
             }
         }
 
-        public void SerializeUsers(List<User> users, string filepath)
+        public static void SerializeUsers(List<User> users, string filepath)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(filepath, FileMode.Create, FileAccess.Write);
@@ -113,7 +113,7 @@ namespace Proyecto_1
             stream.Close();
         }
 
-        public List<User> DeserializeUsers(string filepath)
+        public static List<User> DeserializeUsers(string filepath)
         {
             List<User> users = new List<User>();
             IFormatter formatter = new BinaryFormatter();
@@ -232,7 +232,7 @@ namespace Proyecto_1
             string endTime = appointment.EndTime.ToString("HH:mm", CultureInfo.CurrentCulture);
             string description = appointment.Description;
 
-            string appointmentString = title + "\n" + description + "\n" + startTime + "-" + endTime;
+            string appointmentString = string.Format(CultureInfo.CurrentCulture,"{0}\n{1}\n{2}-{3}", title, description, startTime, endTime);
             if (modeView == ViewMode.Months)
             {
                 label = new Label
@@ -280,7 +280,7 @@ namespace Proyecto_1
                 weekNumbers.Clear();
             }
         }
-        public void FillWeekListWithNumbers(List<int> listNumber, DateTime targetedDate)
+        public static void FillWeekListWithNumbers(List<int> listNumber, DateTime targetedDate)
         {
             if (listNumber == null) { return; }
             DateTime auxDate = targetedDate;
@@ -411,7 +411,7 @@ namespace Proyecto_1
             AppointmentFormGrid.Visibility = Visibility.Hidden;
             AppointmentEditationGrid.Visibility = Visibility.Hidden;
 
-            if (Btn_AppointmentManagment.Content != "Back")
+            if (Btn_AppointmentManagment.Content.ToString() != "Back")
             {
                 AppointmentContainerGrid.Visibility = Visibility.Visible;
                 Btn_AppointmentManagment.Content = "Back";
@@ -512,7 +512,7 @@ namespace Proyecto_1
             LB_UsersInvited.ItemsSource = null;
 
         }
-        public int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
+        public static int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
         {
             if(hour == null || AMPM == null) { return -1; }
             int hourReturned = hour.SelectedIndex + oneHour;
@@ -520,7 +520,7 @@ namespace Proyecto_1
 
             return hourReturned;
         }
-        public int ProcessMinuteForForm(ComboBox minute)
+        public static int ProcessMinuteForForm(ComboBox minute)
         {
             if(minute == null) { return -1; }
 
@@ -562,14 +562,14 @@ namespace Proyecto_1
                 Appointment appointment = new Appointment(title, date, startTime, endTime, description, logedUser, invitedUsers);
                 appointments.Add(appointment);
 
-                TextBlockFeedback.Text = "Saved!";
+                TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture,"Saved!");
                 TextBlockFeedback.Foreground = Brushes.Green;
                 TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
             }
             catch(InvalidOperationException)
             {
                 
-                TextBlockFeedback.Text = "Error!";
+                TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture, "Error");
                 TextBlockFeedback.Foreground = Brushes.Red;
                 TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
             }
@@ -587,7 +587,7 @@ namespace Proyecto_1
             catch (ArgumentException e) when (e.ParamName == "…")
             {
 
-                LoginFeedback_Text.Text = "Error!";
+                LoginFeedback_Text.Text = string.Format(CultureInfo.CurrentCulture,"Error!");
                 LoginFeedback_Text.Foreground = Brushes.Red;
                 LoginFeedback_Text.FontSize = fontSizeForFeedbackLabel;
             }
@@ -693,7 +693,7 @@ namespace Proyecto_1
             }
             else
             {
-                LoginFeedback_Text.Text = "Invalid Email!";
+                LoginFeedback_Text.Text = string.Format(CultureInfo.CurrentCulture, "Invalid Email!"); ;
                 LoginFeedback_Text.Foreground = Brushes.Red;
                 LoginFeedback_Text.FontSize = fontSizeForFeedbackLabel;
             }
@@ -718,7 +718,7 @@ namespace Proyecto_1
             }
             catch (NullReferenceException)
             {
-                TextBlockFeedback.Text = "Error!";
+                TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture,"Error!");
             }
             
         }
