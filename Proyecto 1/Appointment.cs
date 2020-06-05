@@ -17,8 +17,6 @@ namespace Proyecto_1
         public User Creator { get; set; }
         public List<User> InvitedUsers { get; } = new List<User>();
 
-
-
         #endregion
         public Appointment(string title, DateTime date, DateTime startTime, DateTime endTime, string description,User creator, List<User> users)
         {
@@ -65,7 +63,13 @@ namespace Proyecto_1
 
         }
 
-
+        public int Duration()
+        {
+            int duration;
+            TimeSpan difference = EndTime - StartTime;
+            duration = (int)difference.TotalMinutes/60;
+            return duration;
+        }
 
     }
 }

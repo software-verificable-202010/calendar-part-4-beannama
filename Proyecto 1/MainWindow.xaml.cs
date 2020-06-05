@@ -33,6 +33,7 @@ namespace Proyecto_1
         private const int calendarLargeMonths = 7;
         private const int sundayOnCalendar = 0;
         private const int oneDay = 1;
+        private const int firstWeek = 1;
 
         private const int oneWeekOnDays = 7;
         private const int addIfPMHour = 12;
@@ -155,12 +156,13 @@ namespace Proyecto_1
         public void AddAppointmentsToCalendar()
         {
             DateTime auxiliarDate = targetedDate;
+
             if (modeView == ViewMode.Months)
             {
                 for (int weekNumber = 0; weekNumber < weeksInMonth; weekNumber++)
                 {
                     FillWeekListWithAppointments(weekAppointments, auxiliarDate);
-                    FillWeekWithAppointment(weekNumber, weekAppointments);
+                    FillWeekWithAppointments(weekNumber, weekAppointments);
 
                     weekAppointments.Clear();
 
@@ -170,7 +172,8 @@ namespace Proyecto_1
             }
             else if (modeView == ViewMode.Weeks)
             {
-
+                FillWeekListWithAppointments(weekAppointments, auxiliarDate);
+                FillWeekWithAppointments(sundayOnCalendar, weekAppointments);
             }
         }
         public void FillWeekListWithAppointments(List<Appointment> weekAppointments, DateTime targetedDate)
@@ -200,7 +203,7 @@ namespace Proyecto_1
                 }
             }
         }
-        public void FillWeekWithAppointment(int rowNumber, List<Appointment> weekAppointments)
+        public void FillWeekWithAppointments(int rowNumber, List<Appointment> weekAppointments)
         {
             if(weekAppointments == null) { return; }
             int dayColumn;
@@ -215,37 +218,37 @@ namespace Proyecto_1
                 {
                     dayColumn = sundayColumn;
                 }
-                Label appointmentLabel = CreateAppointmentLabel(appointment);
-                AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
-                dayColumn++;
-            }
 
-        }
-        public void AddAppointmentToDay(Label appointmenLabel, int targetedRow, int targetedCol)
-        {
-            if (modeView == ViewMode.Months)
-            {
-                Grid.SetColumn(appointmenLabel, targetedCol);
-                Grid.SetRow(appointmenLabel, targetedRow);
-                DaysOfMonthCalendarGrid.Children.Add(appointmenLabel);
+                if (modeView == ViewMode.Weeks)
+                {
+                    for (int duration = 1; duration <= appointment.Duration(); duration++)
+                    {
+                        Label appointmentLabel = CreateAppointmentLabel(appointment);
 
-            }
-            else if (modeView == ViewMode.Weeks)
-            {
-                
+                        rowNumber = duration;
+                        AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
+
+                    }
+                }
+                else
+                {
+                    Label appointmentLabel = CreateAppointmentLabel(appointment);
+                    AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
+
+                }
             }
 
         }
         public Label CreateAppointmentLabel(Appointment appointment)
         {
-            if (appointment==null) { return null; }
+            if (appointment == null) { return null; }
             Label label = new Label();
             string title = appointment.Title;
             string startTime = appointment.StartTime.ToString("HH:mm", CultureInfo.CurrentCulture);
             string endTime = appointment.EndTime.ToString("HH:mm", CultureInfo.CurrentCulture);
             string description = appointment.Description;
 
-            string appointmentString = string.Format(CultureInfo.CurrentCulture,"{0}\n{1}\n{2}-{3}", title, description, startTime, endTime);
+            string appointmentString = string.Format(CultureInfo.CurrentCulture, "{0}\n{1}\n{2}-{3}", title, description, startTime, endTime);
             if (modeView == ViewMode.Months)
             {
                 label = new Label
@@ -269,6 +272,23 @@ namespace Proyecto_1
 
             return label;
         }
+        public void AddAppointmentToDay(Label appointmenLabel, int targetedRow, int targetedCol)
+        {
+            if (modeView == ViewMode.Months)
+            {
+                Grid.SetColumn(appointmenLabel, targetedCol);
+                Grid.SetRow(appointmenLabel, targetedRow);
+                DaysOfMonthCalendarGrid.Children.Add(appointmenLabel);
+
+            }
+            else if (modeView == ViewMode.Weeks)
+            {
+                Grid.SetColumn(appointmenLabel, targetedCol+1);
+                TimesOfDaysWeekCalendarGrid.Children.Add(appointmenLabel);
+            }
+
+        }
+        
         #endregion
 
         #region Days in Calendar
@@ -289,7 +309,7 @@ namespace Proyecto_1
             else if (modeView == ViewMode.Weeks)
             {
                 FillWeekListWithNumbers(weekNumbers, auxiliarDate);
-                FillWeekWithNumber(1, weekNumbers);
+                FillWeekWithNumber(firstWeek, weekNumbers);
                 weekNumbers.Clear();
             }
         }
@@ -396,6 +416,7 @@ namespace Proyecto_1
                 DaysOfMonthCalendarGrid.Children.Add(colorWeekend);
             }
         }
+
         #endregion
 
 
@@ -410,6 +431,7 @@ namespace Proyecto_1
             }
             else if (modeView == ViewMode.Weeks)
             {
+
                 NumberOfWeekWeekCalendarGrid.Children.Clear();
             }
         }
