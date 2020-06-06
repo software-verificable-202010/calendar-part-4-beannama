@@ -109,7 +109,6 @@ namespace Proyecto_1
                 return appointments;
             }
         }
-
         public static void SerializeUsers(List<User> users, string filepath)
         {
             IFormatter formatter = new BinaryFormatter();
@@ -117,7 +116,6 @@ namespace Proyecto_1
             formatter.Serialize(stream, users);
             stream.Close();
         }
-
         public static List<User> DeserializeUsers(string filepath)
         {
             List<User> users = new List<User>();
@@ -140,7 +138,6 @@ namespace Proyecto_1
 
         public void ChangeTitle()
         {
-            
             MonthTextBlock.Text = targetedDate.ToString("MMMM", CultureInfo.CurrentCulture);
             YearTextBlock.Text = targetedDate.Year.ToString(CultureInfo.CurrentCulture);
         }
@@ -168,7 +165,6 @@ namespace Proyecto_1
 
                     auxiliarDate = auxiliarDate.AddDays(oneWeekOnDays);
                 }
-                
             }
             else if (modeView == ViewMode.Weeks)
             {
@@ -227,14 +223,12 @@ namespace Proyecto_1
 
                         rowNumber = duration;
                         AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
-
                     }
                 }
                 else
                 {
                     Label appointmentLabel = CreateAppointmentLabel(appointment);
                     AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
-
                 }
             }
 
@@ -279,14 +273,12 @@ namespace Proyecto_1
                 Grid.SetColumn(appointmenLabel, targetedCol);
                 Grid.SetRow(appointmenLabel, targetedRow);
                 DaysOfMonthCalendarGrid.Children.Add(appointmenLabel);
-
             }
             else if (modeView == ViewMode.Weeks)
             {
                 Grid.SetColumn(appointmenLabel, targetedCol+1);
                 TimesOfDaysWeekCalendarGrid.Children.Add(appointmenLabel);
             }
-
         }
         
         #endregion
@@ -344,7 +336,6 @@ namespace Proyecto_1
         }
         public void AddNumberToDay(Label numberLabel, int targetedRow, int targetedCol)
         {
-
             if (modeView == ViewMode.Months)
             {
                 Grid grid = new Grid { Name = "DayGrid" };
@@ -363,7 +354,6 @@ namespace Proyecto_1
                 grid.Children.Add(numberLabel);
 
                 DaysOfMonthCalendarGrid.Children.Add(grid);
-
             }
             else if (modeView == ViewMode.Weeks)
             {
@@ -403,14 +393,13 @@ namespace Proyecto_1
 
         public void AddColorToCalendar(int calendarLarge, int targetedCol)
         {
-            
             Border colorWeekend = new Border
             {
                 Background = Brushes.AliceBlue,
             };
             Grid.SetColumn(colorWeekend, targetedCol);
             Grid.SetRowSpan(colorWeekend, calendarLarge);
-            ;
+
             if (modeView == ViewMode.Months)
             {
                 DaysOfMonthCalendarGrid.Children.Add(colorWeekend);
@@ -419,6 +408,7 @@ namespace Proyecto_1
 
         #endregion
 
+        #region WpfMethods
 
         #region DisplaysMethods
         public void CleanCalendar()
@@ -431,7 +421,6 @@ namespace Proyecto_1
             }
             else if (modeView == ViewMode.Weeks)
             {
-
                 NumberOfWeekWeekCalendarGrid.Children.Clear();
             }
         }
@@ -460,7 +449,6 @@ namespace Proyecto_1
                 Btn_AppointmentManagment.Content = "Appointment \n Managment";
                 CheckVisibility();
             }
-            
         }
         public void DisplayAppointmentFormView()
         {
@@ -474,7 +462,6 @@ namespace Proyecto_1
         {
             AppointmentEditationGrid.Visibility = Visibility.Visible;
             AppointmentFormGrid.Visibility = Visibility.Hidden;
-
         }
         public void HideLoginView()
         {
@@ -508,7 +495,6 @@ namespace Proyecto_1
             {
                 DisplayWeekView();
             }
-
         }
         #endregion
 
@@ -544,7 +530,6 @@ namespace Proyecto_1
             TB_DescriptionAppointment.Text = String.Empty;
 
             LB_UsersInvited.ItemsSource = null;
-
         }
         public static int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
         {
@@ -631,7 +616,21 @@ namespace Proyecto_1
 
             LB_Appointments.ItemsSource = userAppointments;
             LB_UsersAvailable.ItemsSource = availableUsers;
-            
+        }
+        private void LB_Appointments_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LB_Appointments.SelectedIndex != -1)
+            {
+                int currentItemIndex = LB_Appointments.SelectedIndex;
+                Appointment currentAppointment = userAppointments[currentItemIndex];
+
+                TB_EditAppointmentTitle.Text = currentAppointment.ToString();
+                DatePicker_EditDateAppointment.SelectedDate = currentAppointment.Date;
+                TB_EditDescriptionAppointment.Text = currentAppointment.Description;
+
+                LB_EditUserAvailable.ItemsSource = users;
+                LB_EditUserInvited.ItemsSource = currentAppointment.InvitedUsers;
+            }
         }
 
         #region ClicksOnButtons
@@ -639,7 +638,7 @@ namespace Proyecto_1
         {
             CheckVisibility();
 
-            if (modeView== ViewMode.Months)
+            if (modeView == ViewMode.Months)
             {
                 targetedDate = targetedDate.AddMonths(1);
             }
@@ -652,7 +651,7 @@ namespace Proyecto_1
         private void MoveBackwardButton_Click(object sender, RoutedEventArgs e)
         {
             CheckVisibility();
-            
+
             if (modeView == ViewMode.Months)
             {
                 targetedDate = targetedDate.AddMonths(-1);
@@ -668,7 +667,8 @@ namespace Proyecto_1
             int monthIndex = 0;
             int weekIndex = 1;
 
-            if (CB_Mode.SelectedIndex.Equals(monthIndex)) {
+            if (CB_Mode.SelectedIndex.Equals(monthIndex))
+            {
                 modeView = ViewMode.Months;
             }
             else if (CB_Mode.SelectedIndex.Equals(weekIndex))
@@ -718,7 +718,7 @@ namespace Proyecto_1
             if (IsValidEmail(email))
             {
                 bool containsEmail = users.Any(item => item.Email == email);
-                
+
                 if (!containsEmail)
                 {
                     StoreUserEmailForm();
@@ -734,7 +734,7 @@ namespace Proyecto_1
                 LoginFeedback_Text.Foreground = Brushes.Red;
                 LoginFeedback_Text.FontSize = fontSizeForFeedbackLabel;
             }
-            
+
         }
         private void AddUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
         {
@@ -755,43 +755,20 @@ namespace Proyecto_1
             }
             catch (NullReferenceException)
             {
-                TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture,"Error!");
+                TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture, "Error!");
             }
-            
+
         }
-
-        #endregion
-
         private void RemoveUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
         {
-
             string currentItemText = LB_UsersInvited.SelectedItem.ToString();
             availableUsers.Add(new User(currentItemText));
 
-            //TODO:Remove User from list
             invitedUsers.Remove(new User(currentItemText));
             LB_UsersInvited.Items.RemoveAt(LB_UsersInvited.Items.IndexOf(LB_UsersInvited.SelectedItem));
             ApplyDataBinding();
         }
-        private void LB_Appointments_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (LB_Appointments.SelectedIndex != -1)
-            {
-                int currentItemIndex = LB_Appointments.SelectedIndex;
-                Appointment currentAppointment = userAppointments[currentItemIndex];
 
-                TB_EditAppointmentTitle.Text = currentAppointment.ToString();
-                DatePicker_EditDateAppointment.SelectedDate = currentAppointment.Date;
-                TB_EditDescriptionAppointment.Text = currentAppointment.Description;
-
-                //TODO: Show Available users
-                LB_EditUserAvailable.ItemsSource = users;
-                LB_EditUserInvited.ItemsSource = currentAppointment.InvitedUsers;
-
-            }
-        }
-
-        //TODO Apply Changes to Appointment
         private void Btn_ApplyChangeAppointments_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -801,13 +778,17 @@ namespace Proyecto_1
 
                 selectedAppointment.Title = TB_EditAppointmentTitle.Text;
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
 
             }
             ApplyDataBinding();
-
-
         }
+        #endregion
+        #endregion
+
+
+
+
     }
 }

@@ -65,9 +65,8 @@ namespace Proyecto_1
 
         public int Duration()
         {
-            int duration;
             TimeSpan difference = EndTime - StartTime;
-            duration = (int)difference.TotalMinutes/60;
+            int duration = (int)difference.TotalMinutes/60;
             return duration;
         }
 
