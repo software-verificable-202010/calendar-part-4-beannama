@@ -24,6 +24,8 @@ namespace Project
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
+
     public partial class MainWindow : Window
     {
         #region CONSTANTS
@@ -56,9 +58,6 @@ namespace Project
 
         private readonly string binaryFilePath = string.Format(CultureInfo.CurrentCulture, "{0}\\appointments.txt", Environment.CurrentDirectory);
         private readonly string usersFilePath = string.Format(CultureInfo.CurrentCulture, "{0}\\users.txt", Environment.CurrentDirectory);
-
-
-
         #endregion
 
         private DateTime targetedDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, firstDayOfMonth);
@@ -73,11 +72,11 @@ namespace Project
         private List<User> availableUsers = new List<User>();
         private readonly List<User> invitedUsers = new List<User>();
 
-        private enum ViewMode{ 
+        public enum ViewMode{ 
             Weeks,
             Months,
         };
-        private ViewMode modeView;
+        private ViewMode ModeView;
 
         
         public MainWindow()
@@ -129,7 +128,7 @@ namespace Project
 
                 if (!containsEmail)
                 {
-                    StoreUserEmailForm();
+                    StoreUserEmailForm(email, users);
                     SerializeUsers(users, usersFilePath);
                 }
                 logedUser = new User(email);
@@ -160,21 +159,25 @@ namespace Project
                 return false;
             }
         }
-        private void StoreUserEmailForm()
+
+        public static void StoreUserEmailForm(string email, List<User> users)
         {
-            try
+            if(users == null)
             {
-                string email = TB_Email.Text;
+                return;
+            }
+            //try
+            //{
                 User user = new User(email);
                 users.Add(user);
-            }
-            catch (ArgumentException e) when (e.ParamName == "…")
-            {
+            //}
+            //catch (ArgumentException e) when (e.ParamName == "…")
+            //{
 
-                LoginFeedback_Text.Text = string.Format(CultureInfo.CurrentCulture, "Error!");
-                LoginFeedback_Text.Foreground = Brushes.Red;
-                LoginFeedback_Text.FontSize = fontSizeForFeedbackLabel;
-            }
+            //    LoginFeedback_Text.Text = string.Format(CultureInfo.CurrentCulture, "Error!");
+            //    LoginFeedback_Text.Foreground = Brushes.Red;
+            //    LoginFeedback_Text.FontSize = fontSizeForFeedbackLabel;
+            //}
         }
         public static void SerializeUsers(List<User> users, string filepath)
         {
@@ -212,11 +215,11 @@ namespace Project
         {
             CheckVisibility();
 
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 targetedDate = targetedDate.AddMonths(1);
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 targetedDate = targetedDate.AddDays(7);
             }
@@ -226,11 +229,11 @@ namespace Project
         {
             CheckVisibility();
 
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 targetedDate = targetedDate.AddMonths(-1);
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 targetedDate = targetedDate.AddDays(-oneWeekOnDays);
             }
@@ -243,11 +246,11 @@ namespace Project
 
             if (CB_Mode.SelectedIndex.Equals(monthIndex))
             {
-                modeView = ViewMode.Months;
+                ModeView = ViewMode.Months;
             }
             else if (CB_Mode.SelectedIndex.Equals(weekIndex))
             {
-                modeView = ViewMode.Weeks;
+                ModeView = ViewMode.Weeks;
             }
         }
         private void CloseDropdownViewComboBox(object sender, EventArgs e)
@@ -382,18 +385,21 @@ namespace Project
             }
 
         }
-        private static int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
+        public static int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
         {
             if (hour == null || AMPM == null)
             {
                 return -1;
             }
             int hourReturned = hour.SelectedIndex + oneHour;
-            if (AMPM.SelectedIndex == pmSelected) hourReturned += addIfPMHour;
+            if (AMPM.SelectedIndex == pmSelected) 
+            {
+                hourReturned += addIfPMHour;
+            };
 
             return hourReturned;
         }
-        private static int ProcessMinuteForForm(ComboBox minute)
+        public static int ProcessMinuteForForm(ComboBox minute)
         {
             if (minute == null)
             {
@@ -511,7 +517,7 @@ namespace Project
         private void AddDaysToCalendar()
         {
             DateTime auxiliarDate = targetedDate;
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 for (int weekNumber = 0; weekNumber < weeksInMonth; weekNumber++)
                 {
@@ -522,14 +528,14 @@ namespace Project
                     auxiliarDate = auxiliarDate.AddDays(oneWeekOnDays);
                 }
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 FillWeekListWithNumbers(weekNumbers, auxiliarDate);
                 FillWeekWithNumber(firstWeek, weekNumbers);
                 weekNumbers.Clear();
             }
         }
-        private static void FillWeekListWithNumbers(List<int> listNumber, DateTime targetedDate)
+        public static void FillWeekListWithNumbers(List<int> listNumber, DateTime targetedDate)
         {
             if (listNumber == null)
             {
@@ -559,14 +565,14 @@ namespace Project
             int counter = 0;
             foreach (int number in listNumber)
             {
-                Label numberLabel = CreateNumberLabel(number.ToString(CultureInfo.CurrentCulture));
+                Label numberLabel = CreateNumberLabel(number.ToString(CultureInfo.CurrentCulture), ModeView);
                 AddNumberToDay(numberLabel, rowNumber, counter);
                 counter++;
             }
         }
         private void AddNumberToDay(Label numberLabel, int targetedRow, int targetedCol)
         {
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 Grid grid = new Grid { Name = "DayGrid" };
                 RowDefinition rowDefinitionAuto = new RowDefinition
@@ -585,14 +591,14 @@ namespace Project
 
                 DaysOfMonthCalendarGrid.Children.Add(grid);
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 Grid.SetColumn(numberLabel, targetedCol + 1);
                 Grid.SetRow(numberLabel, 1);
                 NumberOfWeekWeekCalendarGrid.Children.Add(numberLabel);
             }
         }
-        private Label CreateNumberLabel(string contentText)
+        public static Label CreateNumberLabel(string contentText, ViewMode modeView)
         {
             Label label = new Label();
             if (modeView == ViewMode.Months)
@@ -624,7 +630,7 @@ namespace Project
         {
             DateTime auxiliarDate = targetedDate;
 
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 for (int weekNumber = 0; weekNumber < weeksInMonth; weekNumber++)
                 {
@@ -636,13 +642,13 @@ namespace Project
                     auxiliarDate = auxiliarDate.AddDays(oneWeekOnDays);
                 }
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 FillWeekListWithAppointments(weekAppointments, auxiliarDate);
                 FillWeekWithAppointments(sundayOnCalendar, weekAppointments);
             }
         }
-        private void FillWeekListWithAppointments(List<Appointment> weekAppointments, DateTime targetedDate)
+        public void FillWeekListWithAppointments(List<Appointment> weekAppointments, DateTime targetedDate)
         {
             if (weekAppointments == null)
             {
@@ -689,11 +695,11 @@ namespace Project
                     dayColumn = sundayColumn;
                 }
 
-                if (modeView == ViewMode.Weeks)
+                if (ModeView == ViewMode.Weeks)
                 {
                     for (int duration = 1; duration <= appointment.Duration(); duration++)
                     {
-                        Label appointmentLabel = CreateAppointmentLabel(appointment);
+                        Label appointmentLabel = CreateAppointmentLabel(appointment, ModeView);
 
                         rowNumber = duration;
                         AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
@@ -701,12 +707,12 @@ namespace Project
                 }
                 else
                 {
-                    Label appointmentLabel = CreateAppointmentLabel(appointment);
+                    Label appointmentLabel = CreateAppointmentLabel(appointment, ModeView);
                     AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
                 }
             }
         }
-        private Label CreateAppointmentLabel(Appointment appointment)
+        public static Label CreateAppointmentLabel(Appointment appointment, ViewMode modeView)
         {
             if (appointment == null)
             {
@@ -744,28 +750,29 @@ namespace Project
         }
         private void AddAppointmentToDay(Label appointmenLabel, int targetedRow, int targetedCol)
         {
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 Grid.SetColumn(appointmenLabel, targetedCol);
                 Grid.SetRow(appointmenLabel, targetedRow);
                 DaysOfMonthCalendarGrid.Children.Add(appointmenLabel);
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 Grid.SetColumn(appointmenLabel, targetedCol + 1);
                 TimesOfDaysWeekCalendarGrid.Children.Add(appointmenLabel);
             }
         }
 
+
         private void CleanCalendar()
         {
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 DaysOfMonthCalendarGrid.Children.Clear();
                 AddColorToCalendar(calendarLargeMonths, saturdayColumn);
                 AddColorToCalendar(calendarLargeMonths, sundayColumn);
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 NumberOfWeekWeekCalendarGrid.Children.Clear();
             }
@@ -779,20 +786,19 @@ namespace Project
             Grid.SetColumn(colorWeekend, targetedCol);
             Grid.SetRowSpan(colorWeekend, calendarLarge);
 
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 DaysOfMonthCalendarGrid.Children.Add(colorWeekend);
             }
         }
 
-
         private void CheckVisibility()
         {
-            if (modeView == ViewMode.Months)
+            if (ModeView == ViewMode.Months)
             {
                 DisplayMonthView();
             }
-            else if (modeView == ViewMode.Weeks)
+            else if (ModeView == ViewMode.Weeks)
             {
                 DisplayWeekView();
             }

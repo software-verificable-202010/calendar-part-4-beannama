@@ -9,8 +9,6 @@ namespace AppointmentsTest
     
     public class HasUser
     {
-
-
         [SetUp]
         public void Setup()
         {
@@ -287,6 +285,33 @@ namespace AppointmentsTest
             var result = appointment.IsDate(year, month, day);
 
             Assert.IsFalse(result);
+        }
+    }
+
+    public class GetDescription
+    {
+        [SetUp]
+        public void Setup()
+        {
+        }
+        [Test]
+        public void GetDescription_ValidAppointment_ReturnsDescription()
+        {
+            string title = "sample_title";
+            DateTime date = new DateTime();
+            DateTime start = DateTime.Now;
+            DateTime end = DateTime.Now;
+            string description = "";
+            string creatorMail = "a@a";
+            User creator = new User(creatorMail);
+
+            List<User> users = new List<User>();
+
+            var appointment = new Appointment(title, date, start, end, description, creator, users);
+
+            var result = appointment.Description;
+
+            Assert.AreEqual(result, description);
         }
     }
 }
