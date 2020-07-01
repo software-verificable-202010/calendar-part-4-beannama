@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Proyecto_1
+namespace Project
 {
     [Serializable]
     public class Appointment
@@ -18,6 +18,7 @@ namespace Proyecto_1
         public List<User> InvitedUsers { get; } = new List<User>();
 
         #endregion
+        #region Methods
         public Appointment(string title, DateTime date, DateTime startTime, DateTime endTime, string description,User creator, List<User> users)
         {
             Title = title;
@@ -35,6 +36,7 @@ namespace Proyecto_1
             }
             
         }
+        
         public override string ToString()
         {
             return Title;
@@ -62,13 +64,41 @@ namespace Proyecto_1
             return false;
 
         }
-
         public int Duration()
         {
             TimeSpan difference = EndTime - StartTime;
             int duration = (int)difference.TotalMinutes/60;
+
             return duration;
         }
+        public bool IsDate(int year, int month, int day)
+        {
+            bool yearBool = false; 
+            bool monthBool = false;
+            bool dayBool = false;
 
+            if (year == this.Date.Year)
+            {
+                yearBool = true;
+            }
+            if (month == this.Date.Month)
+            {
+                monthBool = true;
+            }
+            if (day == this.Date.Day)
+            {
+                dayBool = true;
+            }
+            if(yearBool && monthBool && dayBool)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+
+        #endregion
     }
 }

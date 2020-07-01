@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Proyecto_1
+namespace Project
 {
     [Serializable]
     public class User
     {
+        #region Fields
         public string Email{ get; set; }
-
+        #endregion
+        #region Methods
         public User(string email)
         {
             Email = email;
@@ -18,5 +20,6 @@ namespace Proyecto_1
         {
             return Email;
         }
+        #endregion
     }
 }

@@ -1,10 +1,10 @@
-﻿<Window x:Class="Proyecto_1.MainWindow"
+﻿<Window x:Class="Project.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-        xmlns:local="clr-namespace:Proyecto_1" 
+        xmlns:local="clr-namespace:Project" 
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1024">
 
@@ -482,16 +482,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="Btn_CreateApointment"
+                <Button x:Name="Btn_CreateAppointment"
                     VerticalAlignment="Center"  HorizontalAlignment="Center"
                     Grid.Row="0" Grid.Column="0"
                     FontSize="16" FontFamily="Berlin Sans FB Demi" 
                     IsCancel="True"  Content="Create Appointment" Click="CreateAppointmentButton_Click"  Height="56"/>
-                <TextBlock 
-                   Grid.Row="0" Grid.Column="1"
-                   Text="Appointment &#xa; Managment" 
-                   VerticalAlignment="Top" HorizontalAlignment="Center" 
-                   Foreground="SteelBlue" FontSize="36" FontFamily="Berlin Sans FB Demi" FontWeight="Normal" />
+                
+
                 <Button x:Name="Btn_EditAppointment"
                     VerticalAlignment="Center"  HorizontalAlignment="Center"
                     Grid.Row="0" Grid.Column="2"
@@ -680,13 +677,13 @@
                 <Button x:Name="Btn_CancelForm"
                     Grid.Row="5" Grid.Column="1" 
                     Content="Cancel" FontSize="36" 
-                    Background="PaleVioletRed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="CancelForm_Click">
+                    Background="PaleVioletRed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="CancelAppointmentForm_Click">
 
                 </Button>
                 <Button x:Name="Btn_SaveForm"
                     Grid.Row="5" Grid.Column="2"
                     Content="Save" FontSize="36"
-                    Background="SteelBlue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="SaveFormClick">
+                    Background="SteelBlue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="SaveAppointmentFormClick">
 
                 </Button>
             </Grid>
@@ -719,7 +716,7 @@
                         </Grid.ColumnDefinitions>
                         <ListBox x:Name="LB_EditUserAvailable"
                             Grid.Column="0">
-                            
+
                         </ListBox>
 
                         <Button
@@ -736,11 +733,11 @@
                         </ListBox>
 
                     </Grid>
-                    
+
 
                 </Grid>
-                
-                
+
+
                 <Grid x:Name="EditAppointmentFormGrid"
                       Grid.Column="1">
                     <Grid.RowDefinitions>
@@ -893,14 +890,14 @@
                                Grid.Row="5" Grid.Column="0"
                                FontSize="36"
                         />
-                    
+
                     <Button x:Name="Btn_ApplyChangeAppointments"
                             Grid.Row="5" Grid.Column="1"
                             Content="Apply Changes"
                             FontSize="16" FontFamily="Berlin Sans FB Demi" Click="Btn_ApplyChangeAppointments_Click" 
                     />
                 </Grid>
-                
+
 
             </Grid>
 
