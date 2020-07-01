@@ -454,6 +454,7 @@ namespace MainWindowTest
 
             Assert.AreEqual(label.HorizontalAlignment, result.HorizontalAlignment);
         }
+        [Test, Apartment(ApartmentState.STA)]
         public void CreateNumberLabel_ValidTextWeekView_ReturnsLabelCenterAlignment()
         {
             string contentText = "";
