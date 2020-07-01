@@ -488,6 +488,11 @@
                     FontSize="16" FontFamily="Berlin Sans FB Demi" 
                     IsCancel="True"  Content="Create Appointment" Click="CreateAppointmentButton_Click"  Height="56"/>
                 
+                <Button x:Name="Btn_ImportAppointment"
+                    VerticalAlignment="Center"  HorizontalAlignment="Center"
+                    Grid.Row="0" Grid.Column="1"
+                    FontSize="16" FontFamily="Berlin Sans FB Demi" 
+                    IsCancel="True"  Content="Import Appointments" Click="ImportAppointmentsButton_Click" Height="56" />
 
                 <Button x:Name="Btn_EditAppointment"
                     VerticalAlignment="Center"  HorizontalAlignment="Center"
@@ -687,6 +692,44 @@
 
                 </Button>
             </Grid>
+            
+            <Grid x:Name="AppointmentImportationGrid"
+                  Grid.Row="1" Visibility="Hidden">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox x:Name="LB_ImportUserAvailable"
+                            Grid.Column="0">
+                    </ListBox>
+
+                    <Button
+                            Grid.Column="1"
+                            Content="Add" HorizontalAlignment="Center" VerticalAlignment="Top" Click="AddUserToImport"
+                            />
+                    <Button
+                            Grid.Column="1"
+                            Content="Rmv" HorizontalAlignment="Center" VerticalAlignment="Bottom" Click="RemoveUserToImport"
+                            />
+                    <ListBox x:Name="LB_ImportUserInvited"
+                            Grid.Column="2">
+                    </ListBox>
+
+                </Grid>
+
+
+
+            </Grid>
+            
             <Grid x:Name="AppointmentEditationGrid"
                    Grid.Row="1" Visibility="Hidden">
 

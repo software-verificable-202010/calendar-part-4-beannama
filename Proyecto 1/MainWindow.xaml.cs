@@ -69,8 +69,11 @@ namespace Project
 
         private User logedUser;
         private readonly List<User> users = new List<User>();
-        private List<User> availableUsers = new List<User>();
+        private List<User> availableUsersForAppointments = new List<User>();
+        private List<User> availableUsersForImportment = new List<User>();
         private readonly List<User> invitedUsers = new List<User>();
+        private readonly List<User> importedUsers = new List<User>();
+
 
         public enum ViewMode{ 
             Weeks,
@@ -166,18 +169,10 @@ namespace Project
             {
                 return;
             }
-            //try
-            //{
-                User user = new User(email);
-                users.Add(user);
-            //}
-            //catch (ArgumentException e) when (e.ParamName == "…")
-            //{
 
-            //    LoginFeedback_Text.Text = string.Format(CultureInfo.CurrentCulture, "Error!");
-            //    LoginFeedback_Text.Foreground = Brushes.Red;
-            //    LoginFeedback_Text.FontSize = fontSizeForFeedbackLabel;
-            //}
+            User user = new User(email);
+            users.Add(user);
+
         }
         public static void SerializeUsers(List<User> users, string filepath)
         {
@@ -270,6 +265,7 @@ namespace Project
         {
             AppointmentFormGrid.Visibility = Visibility.Hidden;
             AppointmentEditationGrid.Visibility = Visibility.Hidden;
+            AppointmentImportationGrid.Visibility = Visibility.Hidden;
 
             if (Btn_AppointmentManagment.Content.ToString() != "Back")
             {
@@ -296,6 +292,7 @@ namespace Project
         {
             AppointmentFormGrid.Visibility = Visibility.Visible;
             AppointmentEditationGrid.Visibility = Visibility.Hidden;
+            AppointmentImportationGrid.Visibility = Visibility.Hidden;
 
             MonthCalendarGrid.Visibility = Visibility.Hidden;
             WeekCalendarGrid.Visibility = Visibility.Hidden;
@@ -309,6 +306,59 @@ namespace Project
         {
             AppointmentEditationGrid.Visibility = Visibility.Visible;
             AppointmentFormGrid.Visibility = Visibility.Hidden;
+            AppointmentImportationGrid.Visibility = Visibility.Hidden;
+
+            MonthCalendarGrid.Visibility = Visibility.Hidden;
+            WeekCalendarGrid.Visibility = Visibility.Hidden;
+        }
+
+
+
+        private void ImportAppointmentsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyDataBinding();
+            DisplayAppointmentsImportView();
+        }
+        private void DisplayAppointmentsImportView()
+        {
+            AppointmentImportationGrid.Visibility = Visibility.Visible;
+            AppointmentFormGrid.Visibility = Visibility.Hidden;
+            AppointmentEditationGrid.Visibility = Visibility.Hidden;
+
+            MonthCalendarGrid.Visibility = Visibility.Hidden;
+            WeekCalendarGrid.Visibility = Visibility.Hidden;
+        }
+        private void AddUserToImport(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string currentItemText = LB_ImportUserAvailable.SelectedItem.ToString();
+                int currentItemIndex = LB_ImportUserAvailable.SelectedIndex;
+
+                LB_ImportUserInvited.Items.Add(currentItemText);
+                importedUsers.Add(new User(currentItemText));
+
+                if (availableUsersForImportment != null)
+                {
+                    availableUsersForImportment.RemoveAt(currentItemIndex);
+                }
+                ApplyDataBinding();
+                TextBlockFeedback.Text = "";
+            }
+            catch (NullReferenceException)
+            {
+                TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture, "Error!");
+            }
+        }
+        private void RemoveUserToImport(object sender, RoutedEventArgs e)
+        {
+            string currentItemText = LB_ImportUserInvited.SelectedItem.ToString();
+            availableUsersForAppointments.Add(new User(currentItemText));
+
+            importedUsers.Remove(new User(currentItemText));
+            LB_ImportUserInvited.Items.RemoveAt(LB_ImportUserInvited.Items.IndexOf(LB_ImportUserInvited.SelectedItem));
+            ApplyDataBinding();
+
         }
 
 
@@ -383,6 +433,12 @@ namespace Project
                 TextBlockFeedback.Foreground = Brushes.Red;
                 TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
             }
+            catch (ArgumentOutOfRangeException)
+            {
+                TextBlockFeedback.Text = string.Format(CultureInfo.CurrentCulture, "Error");
+                TextBlockFeedback.Foreground = Brushes.Red;
+                TextBlockFeedback.FontSize = fontSizeForFeedbackLabel;
+            }
 
         }
         public static int ProcessHourForForm(ComboBox hour, ComboBox AMPM)
@@ -446,9 +502,9 @@ namespace Project
                 LB_UsersInvited.Items.Add(currentItemText);
                 invitedUsers.Add(new User(currentItemText));
 
-                if (availableUsers != null)
+                if (availableUsersForAppointments != null)
                 {
-                    availableUsers.RemoveAt(currentItemIndex);
+                    availableUsersForAppointments.RemoveAt(currentItemIndex);
                 }
                 ApplyDataBinding();
                 TextBlockFeedback.Text = "";
@@ -462,7 +518,7 @@ namespace Project
         private void RemoveUserOfAppointmentList_Click(object sender, RoutedEventArgs e)
         {
             string currentItemText = LB_UsersInvited.SelectedItem.ToString();
-            availableUsers.Add(new User(currentItemText));
+            availableUsersForAppointments.Add(new User(currentItemText));
 
             invitedUsers.Remove(new User(currentItemText));
             LB_UsersInvited.Items.RemoveAt(LB_UsersInvited.Items.IndexOf(LB_UsersInvited.SelectedItem));
@@ -488,10 +544,14 @@ namespace Project
             LB_UsersAvailable.ItemsSource = null;
             LB_Appointments.ItemsSource = null;
             LB_UsersInvited.ItemsSource = null;
-            availableUsers = users;
+            LB_ImportUserAvailable.ItemsSource = null;
+
+            availableUsersForAppointments = users;
+            availableUsersForImportment = users;
 
             LB_Appointments.ItemsSource = userAppointments;
-            LB_UsersAvailable.ItemsSource = availableUsers;
+            LB_UsersAvailable.ItemsSource = availableUsersForAppointments;
+            LB_ImportUserAvailable.ItemsSource = availableUsersForAppointments;
         }
 
 
@@ -512,7 +572,6 @@ namespace Project
             AddDaysToCalendar();
             AddAppointmentsToCalendar();
         }
-
 
         private void AddDaysToCalendar()
         {
@@ -673,6 +732,10 @@ namespace Project
                         weekAppointments.Add(appointment);
                         userAppointments.Add(appointment);
                     }
+                    else if (appointment.IsDate(year, month, day) && appointment.HasUsers(importedUsers))
+                    {
+                        weekAppointments.Add(appointment);
+                    }
                 }
             }
         }
@@ -764,6 +827,10 @@ namespace Project
         }
 
 
+
+
+
+
         private void CleanCalendar()
         {
             if (ModeView == ViewMode.Months)
@@ -817,5 +884,7 @@ namespace Project
             AppointmentContainerGrid.Visibility = Visibility.Hidden;
             MonthCalendarGrid.Visibility = Visibility.Hidden;
         }
+
+       
     }
 }

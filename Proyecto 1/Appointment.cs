@@ -64,6 +64,21 @@ namespace Project
             return false;
 
         }
+        public bool HasUsers(List<User> users)
+        {
+            if (users == null)
+            {
+                return false;
+            }
+            foreach(User user in users)
+            {
+                if (this.HasUser(user))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public int Duration()
         {
             TimeSpan difference = EndTime - StartTime;
