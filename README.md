@@ -17,3 +17,6 @@ Para cambiar la vista de Mes a Semanas, al lado de los botones existe una casill
 
 
 Para la creacion de una Cita, hacer click en el boton "Create Appointment"
+
+
+Para importar las citas de un usuario, ir al apestaña de Appointments -> Import appointments  y al añadir el usuario a la ListBox de importados se importan todos sus Appointments. No se pueden quitar 
