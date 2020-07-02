@@ -813,7 +813,6 @@ namespace Project
                 }
             }
         }
-
         public static Label CreateAppointmentLabel(Appointment appointment, ViewMode modeView)
         {
             if (appointment == null)
