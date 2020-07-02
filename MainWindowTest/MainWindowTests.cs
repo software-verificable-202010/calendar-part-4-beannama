@@ -482,18 +482,4 @@ namespace MainWindowTest
         }
 
     }
-    //TODO SERIALIZE
-    public class SerializeUsers
-    {
-        [SetUp]
-        public void Setup()
-        {
-        }
-        [Test]
-        public void SerializeUsers_ValiduserListAndFilePath_FileIsWritten()
-        {
-
-        }
-    }
-
 }

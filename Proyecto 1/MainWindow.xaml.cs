@@ -64,6 +64,7 @@ namespace Project
         private readonly List<int> weekNumbers = new List<int>();
 
         private readonly List<Appointment> weekAppointments = new List<Appointment>();
+        private readonly List<Appointment> weekImportedAppointments = new List<Appointment>();
         private readonly List<Appointment> appointments = new List<Appointment>();
         private readonly List<Appointment> userAppointments = new List<Appointment>();
 
@@ -692,8 +693,10 @@ namespace Project
                 {
                     FillWeekListWithAppointments(weekAppointments, auxiliarDate);
                     FillWeekWithAppointments(weekNumber, weekAppointments);
+                    FillWeekWithImportedAppointments(weekNumber, weekImportedAppointments);
 
                     weekAppointments.Clear();
+                    weekImportedAppointments.Clear();
 
                     auxiliarDate = auxiliarDate.AddDays(oneWeekOnDays);
                 }
@@ -731,7 +734,7 @@ namespace Project
                     }
                     else if (appointment.IsDate(year, month, day) && appointment.HasUsers(importedUsers))
                     {
-                        weekAppointments.Add(appointment);
+                        weekImportedAppointments.Add(appointment);
                     }
                 }
             }
@@ -772,6 +775,45 @@ namespace Project
                 }
             }
         }
+        private void FillWeekWithImportedAppointments(int rowNumber, List<Appointment> weekImportedAppointments)
+        {
+            if (weekImportedAppointments == null)
+            {
+                return;
+            }
+
+            foreach (Appointment appointment in weekImportedAppointments)
+            {
+                int dayColumn = (int)appointment.Date.DayOfWeek;
+                if (dayColumn != sundayOnCalendar)
+                {
+                    dayColumn -= oneDay;
+                }
+                else
+                {
+                    dayColumn = sundayColumn;
+                }
+
+                if (ModeView == ViewMode.Weeks)
+                {
+                    for (int duration = 1; duration <= appointment.Duration(); duration++)
+                    {
+                        Label appointmentLabel = CreateAppointmentLabel(appointment, ModeView);
+                        appointmentLabel.Foreground = Brushes.Aqua;
+                        rowNumber = duration;
+                        AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
+                    }
+                }
+                else
+                {
+                    Label appointmentLabel = CreateAppointmentLabel(appointment, ModeView);
+                    appointmentLabel.Foreground = Brushes.Aqua;
+
+                    AddAppointmentToDay(appointmentLabel, rowNumber, dayColumn);
+                }
+            }
+        }
+
         public static Label CreateAppointmentLabel(Appointment appointment, ViewMode modeView)
         {
             if (appointment == null)
