@@ -112,7 +112,77 @@ namespace AppointmentsTest
             Assert.IsFalse(result);
         }
     }
+    public class HasUsers
+    {
+        [SetUp]
+        public void Setup()
+        {
+        }
+        [Test]
+        public void HasUsers_ListIsNull_ReturnFalse()
+        {
+            string title = "sample_title";
+            DateTime date = new DateTime();
+            DateTime start = new DateTime();
+            DateTime end = new DateTime();
+            string description = "";
+            string creatorMail = "a@a";
+            User creator = new User(creatorMail);
+            List<User> users = new List<User>();
 
+            List<User> testList = null;
+            var appointment = new Appointment(title, date, start, end, description, creator, users);
+
+            var result = appointment.HasUsers(testList);
+            Assert.IsFalse(result);
+        }
+        [Test]
+        public void HasUsers_UserIsInList_ReturnTrue()
+        {
+            string title = "sample_title";
+            DateTime date = new DateTime();
+            DateTime start = new DateTime();
+            DateTime end = new DateTime();
+            string description = "";
+            string creatorMail = "a@a";
+            User creator = new User(creatorMail);
+            string otherMail = "b@b";
+            User otherUser = new User(otherMail);
+            List<User> users = new List<User>
+            {
+                otherUser
+            };
+
+            var appointment = new Appointment(title, date, start, end, description, creator, users);
+
+            var result = appointment.HasUsers(users);
+            Assert.IsTrue(result);
+        }
+        [Test]
+        public static void HasUsers_UserNotIsInList_ReturnFalse()
+        {
+            string title = "sample_title";
+            DateTime date = new DateTime();
+            DateTime start = new DateTime();
+            DateTime end = new DateTime();
+            string description = "";
+            string creatorMail = "a@a";
+            User creator = new User(creatorMail);
+            string otherMail = "b@b";
+            User otherUser = new User(otherMail);
+            List<User> users = new List<User>();
+
+            List<User> testList = new List<User>
+            {
+                otherUser
+            };
+
+            var appointment = new Appointment(title, date, start, end, description, creator, users);
+
+            var result = appointment.HasUsers(testList);
+            Assert.IsFalse(result);
+        }
+    }
     public class Duration
     {
         [SetUp]

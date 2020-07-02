@@ -162,7 +162,6 @@ namespace Project
                 return false;
             }
         }
-
         public static void StoreUserEmailForm(string email, List<User> users)
         {
             if(users == null)
@@ -313,7 +312,6 @@ namespace Project
         }
 
 
-
         private void ImportAppointmentsButton_Click(object sender, RoutedEventArgs e)
         {
             ApplyDataBinding();
@@ -358,7 +356,6 @@ namespace Project
             importedUsers.Remove(new User(currentItemText));
             LB_ImportUserInvited.Items.RemoveAt(LB_ImportUserInvited.Items.IndexOf(LB_ImportUserInvited.SelectedItem));
             ApplyDataBinding();
-
         }
 
 
@@ -825,10 +822,6 @@ namespace Project
                 TimesOfDaysWeekCalendarGrid.Children.Add(appointmenLabel);
             }
         }
-
-
-
-
 
 
         private void CleanCalendar()
